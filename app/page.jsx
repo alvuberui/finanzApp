@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import React from 'react';
 import InfoHome from './components/InfoHome';
+import Link from 'next/link';
 
 export default function Home() {
 
@@ -15,7 +16,11 @@ export default function Home() {
               <h1 className="font-extrabold text-4xl text-black-600">Controla en todo momento</h1>
               <h2 className="font-extrabold text-4xl mb-4 text-red-400">tus finanzas personales</h2>
               <p className="font-light text-gray-700 text-lg">¡Crea tu cuenta y empieza a gestionar tu dinero!</p>
-              <button className="bg-lime-300 text-black font-regular py-2 px-4 rounded cursor-pointer mt-10 hover:bg-lime-500">Crear cuenta</button>
+              <Link href="/register">
+                <button className="bg-lime-300 text-black font-regular py-2 px-4 rounded cursor-pointer mt-10 hover:bg-lime-500">
+                  Crear cuenta
+                </button>
+              </Link>
             </div>
             <div className="w-5/10 sm:w-4/10  mx-auto text-center bg-gray-50  rounded pt-8 pb-4 pr-4 pl-4  shadow-md">
               <h2 className="font-bold text-3xl text-black-600 mb-4">Accede a tu cuenta</h2>
