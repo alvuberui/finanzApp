@@ -1,0 +1,8 @@
+.chart-container {
+    width: 600px; /* Ancho fijo para los gráficos */
+    margin: auto; /* Centrar horizontalmente */
+  
+    @media (min-width: 1024px) {
+      width: 800px; /* Aumenta el ancho para pantallas más grandes */
+    }
+}
