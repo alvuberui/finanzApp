@@ -43,7 +43,7 @@ const AnualInnecesary = () => {
       };
     
     return (
-        <div className="flex justify-center items-center text-center ">
+        <div className="flex my-6 justify-center items-center text-center ">
             <div className="rounded-lg overflow-hidden border border-gray-300 my-2 lg:w-1/2 w-full shadow-lg chart-container">
                 <h2 className="text-center mt-2 mb-2 text-2xl font-bold text-gray-900">Comparación de datos</h2>
                 <Bar options={options} data={data_bar} />

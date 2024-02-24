@@ -44,17 +44,10 @@ const MonthBard = () => {
       };
     
     return (
-        <div className="flex justify-center items-center text-center ">
+        <div className="flex my-6 justify-center items-center text-center ">
             <div className="rounded-lg overflow-hidden border border-gray-300 my-2 lg:w-1/2 w-full shadow-lg chart-container">
                 <h2 className="text-center mt-2 mb-2 text-2xl font-bold text-gray-900">Comparación de datos</h2>
                 <Bar options={options} data={data_bar} />
-                <div className="flex justify-center items-center">
-                    <ListElements
-                        colors={['bg-black', 'bg-red-900', 'bg-red-400', 'bg-lime-400', 'bg-pink-500', 'bg-yellow-500', 'bg-blue-400']}
-                        titles={['Beneficio total:', 'Gastos totales:', 'Gastos innecesarios:', 'Gastos necesarios:', 'Resultados inversiones:', 'Dinero invertido:', 'Ahorro:']}
-                        values={['1500€', '500€', '30€', '300€', '50€', '50€', '30€']}
-                    />
-                </div>
             </div>
         </div>
     )

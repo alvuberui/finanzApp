@@ -38,7 +38,7 @@ const MonthDonut = () => {
 
     return (
 
-        <div className="flex justify-center items-center text-center">
+        <div className="flex my-6 justify-center items-center text-center">
             <div className="flex w-2/3 flex-col mb-4 lg:flex-row  items-center text-center justify-center">
                 <div className="w-full lg:w-3/6 my-2 mx-1">
                     <div className="rounded-lg overflow-hidden border border-gray-300 shadow-lg chart-container">
