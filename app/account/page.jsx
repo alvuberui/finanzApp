@@ -2,7 +2,7 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 
-export default function Home() {
+export default function AccountData() {
 
   return (
     <main style={{ width: '100%' }} className="flex min-h-screen flex-col items-center justify-between pt-5 bg-white">
@@ -15,18 +15,15 @@ export default function Home() {
           birthDate: Yup.date().required('Campo obligatorio'),
           currentMoney: Yup.number().required('Campo obligatorio'),
           email: Yup.string().email('Email inválido').required('Campo obligatorio'),
-          password: Yup.string().min(6, 'Debe de contener al menos 6 caracteres').required('Campo obligatorio'),
-          confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Las contraseñas deben coincidir').required('Campo obligatorio'),
-          acceptedTerms: Yup.boolean().oneOf([true], 'Debes de aceptar términos y condiciones').required('Campo obligatorio')
         })}
         onSubmit={(values, { setSubmitting }) => {
           console.log(values);
           setSubmitting(false);
         }}
       >
-        <Form className="my-auto mb-5 flex flex-col w-full max-w-md bg-white rounded-lg shadow-md p-8">
-          <h1 className="text-3xl font-bold text-center mb-5">Crear cuenta</h1>
-          <p className="text-gray-600 text-sm text-center mb-5">Si ya tienes cuenta puedes <a href="/" className="text-red-400 hover:underline ">iniciar sesión aquí</a></p>
+        <Form className="mx-auto my-auto flex flex-col w-full max-w-md bg-white rounded-lg shadow-md p-8">
+          <h1 className="text-3xl font-bold text-center mb-5">Modificar datos</h1>
+          <p className="text-gray-600 text-sm text-center mb-5">Si deseas modificar tu contraseña <a href="/password" className="text-red-400 hover:underline ">hazlo aquí</a></p>
           <div className="flex flex-col mb-5">
             <label htmlFor="name" className="text-sm mb-1">Nombre</label>
             <Field name="name" type="text" placeholder="Nombre" className="border border-gray-300 p-2 rounded-md" />
@@ -60,22 +57,8 @@ export default function Home() {
             <Field name="email" type="email" placeholder="Email" className="border border-gray-300 p-2 rounded-md" />
             <ErrorMessage name="email" component="div" className="text-red-500 text-sm" />
           </div>
-          <div className="flex flex-col mb-5">
-            <label htmlFor="password" className="text-sm mb-1">Contraseña</label>
-            <Field name="password" type="password" placeholder="Contraseña" className="border border-gray-300 p-2 rounded-md" />
-            <ErrorMessage name="password" component="div" className="text-red-500 text-sm" />
-          </div>
-          <div className="flex flex-col mb-5">
-            <label htmlFor="confirmPassword" className="text-sm mb-1">Confirmar contraseña</label>
-            <Field name="confirmPassword" type="password" placeholder={"Confirmar contraseña"} className="border border-gray-300 p-2 rounded-md" />
-            <ErrorMessage name="confirmPassword" component="div" className="text-red-500 text-sm" />
-          </div>
-          <div className="flex items-center mb-5">
-            <Field type="checkbox" name="acceptedTerms" className="mr-2" />
-            <label htmlFor="acceptedTerms" className="text-sm text-gray-700">Acepto los términos y condiciones</label>
-          </div>
           <ErrorMessage name="acceptedTerms" component="div" className="text-red-500 text-sm" />
-          <button type="submit" className="bg-red-400 text-white py-2 px-4 rounded-md hover:bg-red-500 transition duration-300 ease-in-out">Crear cuenta</button>
+          <button type="submit" className="bg-red-400 text-white py-2 px-4 rounded-md hover:bg-red-500 transition duration-300 ease-in-out">Modificar datos</button>
         </Form>
       </Formik>
     </main>
