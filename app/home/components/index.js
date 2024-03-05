@@ -1,0 +1,19 @@
+// Exports all components in the folder
+export { default as MonthCard } from './MonthCard';
+export { default as MonthDonut } from './MonthDonut';
+export { default as MonthBard } from './MonthBard';
+export { default as AnualBenefit } from './AnualBenefit';
+export { default as AnualDividend } from './AnualDividend';
+export { default as AnualBills } from './AnualBills';
+export { default as AnualNecessary } from './AnualNecessary';
+export { default as AnualInnecesary } from './AnualInnecesary';
+export { default as AnualReview } from './AnualReview';
+export { default as AnualInvestment } from './AnualInvestment';
+export { default as HistorialReview } from './HistorialReview';
+export { default as HistoricalBenefits } from './HistoricalBenefits';
+export { default as HistoricalBills } from './HistoricalBills';
+export { default as HistoricalDividends } from './HistoricalDividends';
+export { default as HistoricalInvestment } from './HistoricalInvestment';
+export { default as HistoricalMoney } from './HistoricalMoney';
+export { default as HistoricalNecessary } from './HistoricalNecessary';
+export { default as HistoricalUnnecesary } from './HistoricalUnnecesary';
