@@ -1,9 +1,7 @@
 'use client';
 import { useEffect, useState } from "react";
 
-const DatePickerMonth = () => {
-  const [monthSelected, setMonthSelected] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+const DatePickerMonth = ({ monthSelected, setMonthSelected }) => {
   const [ isDateNow, setIsDateNow] = useState(true);
   const currentDate = new Date();
 
@@ -35,16 +33,6 @@ const DatePickerMonth = () => {
     setMonthSelected(`${year}-${month}`);
   };
 
-  useEffect(() => {
-    const year = currentDate.getFullYear();
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-    setMonthSelected(`${year}-${month}`);
-    setIsLoading(false);
-  }, []);
-
-  if (isLoading) {
-    return <div className="loader"></div>;
-  }
 
   return (
     <> 

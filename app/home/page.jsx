@@ -7,6 +7,7 @@ import { AnualBenefit, AnualBills, AnualDividend, AnualInnecesary, AnualInvestme
 import HistoricalNecessary from "./components/HistoricalNecessary";
 import HistoricalInvestment from "./components/HistoricalInvestment";
 import HistoricalMoney from "./components/HistoricalMoney";
+import useTransaction from "../handlers/useTransaction";
 
 const Dashboard = () => {
 
@@ -14,7 +15,32 @@ const Dashboard = () => {
   const [typeSelected, setTypeSelected] = useState(0);
   const [annualOption, setAnnualOption] = useState(0);
   const [historicalOption, setHistoricalOption] = useState(0);
+  const [monthSelected, setMonthSelected] = useState('');
+  const [transactions, setTransactions] = useState({});
+  const [ isLoading, setIsLoading ] = useState(true);
 
+  const { getAllTransactions } = useTransaction();
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const data = await getAllTransactions();
+        setTransactions(data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error fetching transactions:', error);
+      }
+    };
+
+    fetchTransactions();
+  }, []);
+
+  useEffect(() => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+    setMonthSelected(`${year}-${month}`);
+  }, []);
 
   return (
     <main className="flex min-h-screen w-full flex-col items-center justify-between pt-5 bg-white">
@@ -27,32 +53,26 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-  
-        {selectedOption === 0 &&
-          <div className="mx-auto w-max mb-5">
-            <div className="rounded-lg overflow-hidden bg-white flex items-center border border-gray-300 shadow-lg">
-              <DatePickerMonth />
-            </div>
-          </div>
-        }
-  
-        {selectedOption === 1 &&
-          <div className="mx-auto w-max mb-5">
-            <div className="rounded-lg overflow-hidden bg-white flex items-center border border-gray-300 shadow-lg">
-              <DatePickerYear />
-            </div>
-          </div>
-        }
-  
         {selectedOption === 0 ?
           <>
+            <div className="mx-auto w-max mb-5">
+            <div className="rounded-lg overflow-hidden bg-white flex items-center border border-gray-300 shadow-lg">
+              <DatePickerMonth monthSelected={monthSelected} setMonthSelected={setMonthSelected}/>
+            </div>
+          </div>
             <div className="mx-auto w-max">
               <div className="rounded-lg overflow-hidden shadow-xl bg-white flex">
                 <ButtonsMenu setFunction={setTypeSelected} state={typeSelected} listNames={['Listado', 'Rosca', 'Barras']} />
               </div>
             </div>
-            {typeSelected === 0 &&
-              <MonthCard />
+            {typeSelected === 0 && transactions[monthSelected.slice(0, 4)] && transactions[monthSelected.slice(0, 4)][monthSelected.slice(5, 7)] ? 
+              transactions[monthSelected.slice(0, 4)][monthSelected.slice(5, 7)].map((transaction) => (
+                <MonthCard values={transaction} key={transaction._id} />
+              )) : 
+              !isLoading &&
+              <div className="mx-2 my-6 flex justify-center  mb-4">
+                      <p className="text-black-900 font-light mt-10">No hay transacciones para este mes</p>
+              </div>
             }
             {typeSelected === 1 &&
               <MonthDonut />
@@ -63,6 +83,11 @@ const Dashboard = () => {
           </>
           : selectedOption === 1 ?
             <>
+              <div className="mx-auto w-max mb-5">
+                <div className="rounded-lg overflow-hidden bg-white flex items-center border border-gray-300 shadow-lg">
+                  <DatePickerYear />
+                </div>
+              </div>
               <div className="mx-auto w-max">
                 <div className="rounded-lg overflow-hidden shadow-xl bg-white flex">
                   <ButtonsMenu setFunction={setAnnualOption} state={annualOption} listNames={['Resumen', 'Beneficios', 'Gastos', 'Innecesarios', 'Necesarios', 'Inversion', 'Dividendos']} />

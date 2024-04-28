@@ -12,7 +12,7 @@ const { NextResponse } = require("next/server");
 connect();
 
 /*
- * POST /api/transaction/benefit/create
+ * POST /api/transaction/benefit
  * Create a a new benefit transaction
  */
 async function POST(request) {
