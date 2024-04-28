@@ -25,7 +25,6 @@ const page = () => {
         
         
         onSubmit={(values, { setSubmitting }) => {
-          console.log(values);
           setSubmitting(false);
         }}
       >

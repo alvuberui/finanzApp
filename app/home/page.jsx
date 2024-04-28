@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ButtonsMenu, DatePickerMonth, DatePickerYear } from "../components";
-
+import { useSelector, useDispatch } from "react-redux";
 import { AnualBenefit, AnualBills, AnualDividend, AnualInnecesary, AnualInvestment, AnualNecessary, AnualReview, HistorialReview, HistoricalBenefits, HistoricalBills, HistoricalDividends, HistoricalUnnecesary, MonthBard, MonthCard, MonthDonut } from "./components";
 import HistoricalNecessary from "./components/HistoricalNecessary";
 import HistoricalInvestment from "./components/HistoricalInvestment";
