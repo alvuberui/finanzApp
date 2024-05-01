@@ -19,7 +19,15 @@ const Dashboard = () => {
   const [transactions, setTransactions] = useState({});
   const [ isLoading, setIsLoading ] = useState(true);
 
-  const { getAllTransactions } = useTransaction();
+  const { getAllTransactions, deleteTransaction } = useTransaction();
+
+  const handleDeleteTransaction = async (type, id) => {
+    const res = await deleteTransaction(type, id);
+    if(res) {
+      const data = await getAllTransactions();
+      setTransactions(data);
+    }
+  }
 
   useEffect(() => {
     const fetchTransactions = async () => {
@@ -67,7 +75,7 @@ const Dashboard = () => {
             </div>
             {typeSelected === 0 && transactions[monthSelected.slice(0, 4)] && transactions[monthSelected.slice(0, 4)][monthSelected.slice(5, 7)] ? 
               transactions[monthSelected.slice(0, 4)][monthSelected.slice(5, 7)].map((transaction) => (
-                <MonthCard values={transaction} key={transaction._id} />
+                <MonthCard values={transaction} handleDelete={handleDeleteTransaction} key={transaction._id} />
               )) : 
               !isLoading &&
               <div className="mx-2 my-6 flex justify-center  mb-4">

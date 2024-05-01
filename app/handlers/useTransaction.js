@@ -63,6 +63,16 @@ export function useTransaction() {
     }
   };
 
+  const deleteTransaction = async (type, id) => {
+    try {
+      const response = await axios.delete(`/api/transaction/${type}/${id}`);
+      toast.success(response.data.message);
+      return id;
+    } catch (error) {
+      toast.error(error.response.data.error);
+    }
+  };
+
   return {
     createBenefitTransaction,
     createExpenseTransaction,
@@ -70,6 +80,7 @@ export function useTransaction() {
     getAllTransactions,
     getTransactionByTypeAndId,
     updateTransaction,
+    deleteTransaction,
   };
 }
 export default useTransaction;

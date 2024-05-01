@@ -122,7 +122,48 @@ async function PUT(request, { params }) {
   }
 }
 
+/*
+ * Delete the transaction by id and type
+ */
+async function DELETE(request, { params }) {
+  try {
+    const userId = getDataFromToken(request);
+    const { type, id } = params;
+
+    switch (type) {
+      case "benefit":
+        await BenefitTransaction.findOneAndDelete({ _id: id, userId });
+        break;
+      case "expense":
+        await ExpenseTransaction.findOneAndDelete({ _id: id, userId });
+        break;
+      case "investment":
+        await InvestmentTransaction.findOneAndDelete({ _id: id, userId });
+        break;
+      default:
+        return NextResponse.json(
+          {
+            error:
+              "La transacción que busca no existe. Por favor, inténtelo de nuevo.",
+          },
+          { status: 404 }
+        );
+    }
+
+    return NextResponse.json({
+      message: "La transacción ha sido eliminada correctamente.",
+      success: true,
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { error: "Ha ocurrido un error. Por favor, inténtelo de nuevo." },
+      { status: 500 }
+    );
+  }
+}
+
 module.exports = {
   GET,
   PUT,
+  DELETE,
 };

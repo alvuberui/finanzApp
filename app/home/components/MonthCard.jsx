@@ -1,8 +1,11 @@
+import useTransaction from '@/app/handlers/useTransaction';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
-const MonthCard = ({values}) => {
+const MonthCard = ({values, handleDelete}) => {
   const [ transaction, setTransaction ] = useState()
+
+    
 
   useEffect(() => {
     let res = {};
@@ -31,6 +34,8 @@ const MonthCard = ({values}) => {
     }
     setTransaction(res);
   }, [values])
+
+
   if( !transaction ) return (<div></div>);
   return (
     <div className="mx-2 my-6 flex justify-center mb-4">
@@ -40,11 +45,12 @@ const MonthCard = ({values}) => {
             <p className="text-red-400 font-light">{transaction.dayMonth}</p>
           </div>
           <div className="flex items-center">
-          <Link href={'/transaction/update/' + transaction.backType + '/' + transaction._id} >
-            <i className="material-icons text-2xl text-gray-500 cursor-pointer mr-2">edit</i>
+          <Link  href={'/transaction/update/' + transaction.backType + '/' + transaction._id} >
+            <i className="material-icons text-2xl text-gray-500 cursor-pointer mt-1 mr-2">edit</i>
           </Link>
-            <i className="material-icons text-2xl text-gray-500 cursor-pointer">delete</i>
+            <i  onClick={ () => handleDelete(values.type, values._id) } className="material-icons text-2xl text-gray-500 cursor-pointer">delete</i>
           </div>
+          
         </div>
         <div className="mt-2">
           <p className="text-xl" style={{ marginBottom: "0.5rem" }}>{transaction.type} - {transaction.description}</p>

@@ -27,7 +27,6 @@ async function GET(request) {
     const expenses = await ExpenseTransaction.find({ userId });
     const investments = await InvestmentTransaction.find({ userId });
 
-    // Convertimos todos los objetos en un solo objeto de tipo { "_id", "type", "quantity", "subtype", "date", "description"}
     const transactions = [...benefits, ...expenses, ...investments];
     const transactionsByYear = {};
 
@@ -47,7 +46,6 @@ async function GET(request) {
       transactionsByYear[year][paddedMonth].push(transaction);
     });
 
-    // Ordenar transacciones por fecha en cada mes
     for (const year in transactionsByYear) {
       for (const month in transactionsByYear[year]) {
         transactionsByYear[year][month].sort((a, b) => a.date - b.date);
