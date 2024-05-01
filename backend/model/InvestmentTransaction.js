@@ -23,6 +23,10 @@ const investmentTransactionSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
+  type: {
+    type: String,
+    required: true,
+  },
 });
 
 const InvestmentTransaction =

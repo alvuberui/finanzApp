@@ -61,7 +61,7 @@ async function GET(request) {
   } catch (error) {
     return NextResponse.json(
       { error: "Ha ocurrido un error. Por favor, inténtelo de nuevo" },
-      { status: 400 }
+      { status: 500 }
     );
   }
 }

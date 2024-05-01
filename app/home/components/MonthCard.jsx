@@ -1,11 +1,11 @@
-import React, {  useEffect, useState } from 'react'
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 const MonthCard = ({values}) => {
   const [ transaction, setTransaction ] = useState()
 
   useEffect(() => {
     let res = {};
-    // day month sera una cadena de tipo 17 ENERO | Miércoles. Se sacara a partes values.date que es de tipo Date
     const date = new Date(values.date);
     const day = date.getDate();
     const month = date.toLocaleString('es-ES', { month: 'long' });
@@ -13,40 +13,49 @@ const MonthCard = ({values}) => {
     res.dayMonth = `${day} ${month} | ${dayWeek}`;
     res.amount = values.quantity;
     res.description = values.description;
+    res._id = values._id;
 
-    if(values.investmentType === "BENEFIT" || values.investmentType === "INVESTMENT") {
+    if(values.type === "investment") {
       const string = values.investmentType === "BENEFIT" ? "Beneficio" : "Invertido";
       res.type = "Inversión (" + string+ ")";
+      res.backType = "investment"
     }
-    else if(values.expenseType === "MANDATORY" || values.expenseType === "UNNECESARY") {
+    else if(values.type === "expense") {
       const string = values.expenseType === "MANDATORY" ? "Obligatorio" : "Innecesario";
       res.type = "Gasto (" + string + ")";
+      res.backType = "expense"
     }
     else {
       res.type = "Beneficio";
+      res.backType = "benefit"
     }
     setTransaction(res);
   }, [values])
-
   if( !transaction ) return (<div></div>);
   return (
-    <div className="mx-2 my-6 flex justify-center  mb-4">
-            <div className="lg:w-1/2 w-full bg-white rounded-lg border border-gray-300 shadow-lg p-4">
-              <div className="flex justify-between">
-                <div className="text-xl">
-                  <p className="text-red-400 font-light">{transaction.dayMonth }</p>
-                </div>
-              </div>
-              <div className="mt-2">
-                <p className="text-xl" style={{ marginBottom: "0.5rem" }}>{transaction.type} - {transaction.description}</p>
-              </div>
-              <div className="flex justify-end">
-                <div className="flex items-center">
-                  <p className="text-xl font-bold" style={{ marginRight: "0.5rem" }}>{transaction.amount}€</p>
-                </div>
-              </div>
-            </div>
+    <div className="mx-2 my-6 flex justify-center mb-4">
+      <div className="lg:w-1/2 w-full bg-white rounded-lg border border-gray-300 shadow-lg p-4 relative">
+        <div className="flex justify-between items-center">
+          <div className="text-xl">
+            <p className="text-red-400 font-light">{transaction.dayMonth}</p>
           </div>
+          <div className="flex items-center">
+          <Link href={'/transaction/update/' + transaction.backType + '/' + transaction._id} >
+            <i className="material-icons text-2xl text-gray-500 cursor-pointer mr-2">edit</i>
+          </Link>
+            <i className="material-icons text-2xl text-gray-500 cursor-pointer">delete</i>
+          </div>
+        </div>
+        <div className="mt-2">
+          <p className="text-xl" style={{ marginBottom: "0.5rem" }}>{transaction.type} - {transaction.description}</p>
+        </div>
+        <div className="flex justify-end">
+          <div className="flex items-center">
+            <p className="text-xl font-bold" style={{ marginRight: "0.5rem" }}>{transaction.amount}€</p>
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
 

@@ -41,11 +41,35 @@ export function useTransaction() {
     }
   };
 
+  const getTransactionByTypeAndId = async (type, id) => {
+    try {
+      const response = await axios.get(`/api/transaction/${type}/${id}`);
+      return response.data.data;
+    } catch (error) {
+      toast.error(error.response.data.error);
+    }
+  };
+
+  const updateTransaction = async (type, id, values) => {
+    try {
+      const response = await axios.put(
+        `/api/transaction/${type}/${id}`,
+        values
+      );
+      toast.success(response.data.message);
+      return response.data.data;
+    } catch (error) {
+      toast.error(error.response.data.error);
+    }
+  };
+
   return {
     createBenefitTransaction,
     createExpenseTransaction,
     createInvestmentTransaction,
     getAllTransactions,
+    getTransactionByTypeAndId,
+    updateTransaction,
   };
 }
 export default useTransaction;

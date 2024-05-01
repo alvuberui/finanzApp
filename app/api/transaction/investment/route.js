@@ -28,6 +28,7 @@ async function POST(request) {
 
     const userId = getDataFromToken(request);
     reqBody.userId = userId;
+    reqBody.type = "investment";
 
     const newInvestmentTransaction = new InvestmentTransaction(reqBody);
     const savedInvestment = await newInvestmentTransaction.save();
