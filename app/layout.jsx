@@ -1,12 +1,12 @@
-import { Inter } from "next/font/google";
+"use client";
 import "./globals.css";
 import { Footer, Navbar } from "./components";
+import { Provider } from 'react-redux';
+import store from '../store';
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
-
-
-const inter = Inter({ subsets: ["latin"] });
-
-export const metadata = {
+const metadata = {
   title: "finanzApp",
   description: "Gestiona tus finanzas personales",
 };
@@ -23,9 +23,12 @@ export default function RootLayout({ children }) {
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
       </head>
       <body className="bg-gray-100">
+      <Provider store={store}>
         <Navbar />
+        <ToastContainer />
         {children}
         <Footer />
+      </Provider>
       </body>
     </html>
   );

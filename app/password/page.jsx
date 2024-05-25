@@ -14,7 +14,6 @@ export default function Home() {
           confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Las contraseñas deben coincidir').required('Campo obligatorio'),
         })}
         onSubmit={(values, { setSubmitting }) => {
-          console.log(values);
           setSubmitting(false);
         }}
       >

@@ -1,27 +1,40 @@
 'use client';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { useRouter } from "next/navigation";
+import useAuth from '../handlers/useAuth';
 
 export default function Home() {
+
+  const router = useRouter();
+  const { signup } = useAuth();
 
   return (
     <main style={{ width: '100%' }} className="flex min-h-screen flex-col items-center justify-between pt-5 bg-white">
       <Formik
-        initialValues={{ email: '', password: '', confirmPassword: '' }}
+        initialValues={{ name: '', firstName: '', lastName: '', birthDate: '', currentMoney: 0, email: '', password: '', confirmPassword: '', acceptedTerms: false }}
         validationSchema={Yup.object({
-          name: Yup.string().required('Campo obligatorio'),
-          firstName: Yup.string().required('Campo obligatorio'),
-          lastName: Yup.string().required('Campo obligatorio'),
-          birthDate: Yup.date().required('Campo obligatorio'),
-          currentMoney: Yup.number().required('Campo obligatorio'),
-          email: Yup.string().email('Email inválido').required('Campo obligatorio'),
-          password: Yup.string().min(6, 'Debe de contener al menos 6 caracteres').required('Campo obligatorio'),
+          name: Yup.string().required('Campo obligatorio').max(50, 'Máximo 50 caracteres'),
+          firstName: Yup.string().required('Campo obligatorio').max(50, 'Máximo 50 caracteres'),
+          lastName: Yup.string().required('Campo obligatorio').max(50, 'Máximo 50 caracteres'),
+          birthDate: Yup.date().max(new Date(new Date().getFullYear() - 12, new Date().getMonth(), new Date().getDate()), 'Debes de tener al menos 12 años').required('Campo obligatorio'),
+          currentMoney: Yup.number().required('Campo obligatorio').min(0, 'No puede ser negativo'),
+          email: Yup.string().email('Email inválido').required('Campo obligatorio').max(500, 'Máximo 500 caracteres'),
+          password: Yup.string().min(6, 'Debe de contener al menos 6 caracteres').required('Campo obligatorio').max(50, 'Máximo 50 caracteres'),
           confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Las contraseñas deben coincidir').required('Campo obligatorio'),
           acceptedTerms: Yup.boolean().oneOf([true], 'Debes de aceptar términos y condiciones').required('Campo obligatorio')
         })}
-        onSubmit={(values, { setSubmitting }) => {
-          console.log(values);
-          setSubmitting(false);
+        onSubmit={async (values) => {
+          try {
+            const response = await signup(values)
+            if (response) {
+              router.push('/home')
+            }
+          } catch (error) {
+            /*
+             * TODO: Falta mostrar erro en popup
+              */
+          }
         }}
       >
         <Form className="my-auto mb-5 flex flex-col w-full max-w-md bg-white rounded-lg shadow-md p-8">

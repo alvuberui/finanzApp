@@ -17,7 +17,6 @@ export default function AccountData() {
           email: Yup.string().email('Email inválido').required('Campo obligatorio'),
         })}
         onSubmit={(values, { setSubmitting }) => {
-          console.log(values);
           setSubmitting(false);
         }}
       >

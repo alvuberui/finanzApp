@@ -2,56 +2,58 @@
 import useTransaction from '@/app/handlers/useTransaction';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 
-const page = () => {
-
+const page = ({params}) => {
   const router = useRouter();
+  const { type, id } = params;
+  const [ oldTransactions, setOldTransactions ] = useState();
+  const { getTransactionByTypeAndId, updateTransaction } = useTransaction();
 
-  const { createBenefitTransaction, createExpenseTransaction, createInvestmentTransaction } = useTransaction();
+  useEffect(() => {
+    async function fetchData() {
+      if(type && id) {
+        const ot = await getTransactionByTypeAndId(type, id);
+        if(ot) {
+          const dateObj = new Date(ot.date).toISOString().slice(0, 10);
+          ot.date = dateObj;
+        }
+        setOldTransactions(ot);
+      }
+    }
+    fetchData();
+  }, []);
 
+  if(!oldTransactions) {
+    return (
+      <main style={{ width: '100%' }} className="flex min-h-screen flex-col items-center justify-between pt-5 bg-white">
+      </main>
+    )
+  } 
   return (
     <main style={{ width: '100%' }} className="flex min-h-screen flex-col items-center justify-between pt-5 bg-white">
       <Formik
-        initialValues={{ movementType: 'benefit', amount: '1', description: '', date: new Date().toISOString().substring(0, 10) , spentType: 'necessary', investmentType: 'benefit' }}
+        initialValues={{ movementType: oldTransactions.type, quantity: oldTransactions.quantity, description: oldTransactions.description, date: oldTransactions.date , expenseType: oldTransactions.expenseType, investmentType: oldTransactions.investmentType }}
         const validationSchema = { Yup.object({
           movementType: Yup.string().required('El tipo de movimiento es requerido'),
-          amount: Yup.number().required('La cantidad es requerida').min(1, 'Debe de ser mayor a 0'),
+          quantity: Yup.number().required('La cantidad es requerida').min(1, 'Debe de ser mayor a 0'),
           description: Yup.string().required('La descripción es requerida').max(100, 'Máximo 100 caracteres'),
           date: Yup.date().required('La fecha es requerida').max(new Date(), 'La fecha no puede ser futura'),
           investmentType: Yup.string().when('movementType', {
             is: (val) => val === 'investment',
             then: () => Yup.string().required('El tipo de inversión es requerido'),
           }),
-          spentType: Yup.string().when('movementType', {
-            is: (val) => val === 'spent',
+          expenseType: Yup.string().when('movementType', {
+            is: (val) => val === 'expense',
             then: () => Yup.string().required('El tipo de gasto es requerido'),
           }),
         })}
         onSubmit={async (values) => {
-          switch (values.movementType) {
-            case 'benefit':
-              const finalBenefit = { "quantity": values.amount, "description": values.description, "date": values.date };
-              const resBenefit = await createBenefitTransaction(finalBenefit);
-              console.log(resBenefit);
-              if(resBenefit) {
-                router.push('/home');
-              }
-              break;
-            case 'spent':
-              const finalExpense = { "quantity": values.amount, "description": values.description, "date": values.date, "expenseType": values.spentType === 'necessary' ? 'MANDATORY' : 'UNNECESSARY'};
-              const resExpense = await createExpenseTransaction(finalExpense);
-              if(resExpense) {
-                router.push('/home');
-              }
-              break;
-            case 'investment':
-              const finalInvestment = { "quantity": values.amount, "description": values.description, "date": values.date, "investmentType": values.investmentType === 'benefit' ? 'BENEFIT' : 'INVESTMENT'};
-              const resInvestment = await createInvestmentTransaction(finalInvestment);
-              if(resInvestment) {
-                router.push('/home');
-              }
-              break;
+          const response = await updateTransaction(type, id, values);
+          if(response) {
+            router.push('/home');
+            setOldTransactions();
           }
         }}
       >
@@ -60,9 +62,9 @@ const page = () => {
             <h1 className="text-3xl font-bold text-center mb-5">Nuevo movimiento</h1>
             <div className="flex flex-col mb-5">
               <label htmlFor="movementType" className="text-sm mb-1">Tipo de movimiento</label>
-              <Field name="movementType" as="select" className="border border-gray-300 p-2 rounded-md">
+              <Field disabled={true} name="movementType" as="select" className="border border-gray-300 p-2 rounded-md">
                 <option value="benefit">Beneficio</option>
-                <option value="spent">Gasto</option>
+                <option value="expense">Gasto</option>
                 <option value="investment">Inversiones</option>
               </Field>
               <ErrorMessage name="movementType" component="div" className="text-red-500 text-sm" />
@@ -71,9 +73,9 @@ const page = () => {
             {formik.values.movementType === 'benefit' && (
               <>
                 <div className="flex flex-col mb-5">
-                  <label htmlFor="amount" className="text-sm mb-1">Cantidad</label>
-                  <Field name="amount" type="number" className="border border-gray-300 p-2 rounded-md" />
-                  <ErrorMessage name="amount" component="div" className="text-red-500 text-sm" />
+                  <label htmlFor="quantity" className="text-sm mb-1">Cantidad</label>
+                  <Field name="quantity" type="number" className="border border-gray-300 p-2 rounded-md" />
+                  <ErrorMessage name="quantity" component="div" className="text-red-500 text-sm" />
                 </div>
                 <div className="flex flex-col mb-5">
                   <label htmlFor="description" className="text-sm mb-1">Descripción</label>
@@ -88,20 +90,20 @@ const page = () => {
               </>
             )}
 
-            {formik.values.movementType === 'spent' && (
+            {formik.values.movementType === 'expense' && (
               <>
                 <div className="flex flex-col mb-5">
-                  <label htmlFor="spentType" className="text-sm mb-1">Tipo de gasto</label>
-                  <Field name="spentType" as="select" className="border border-gray-300 p-2 rounded-md">
-                    <option value="necessary">Necesario</option>
-                    <option value="unnecessary">Prescindible</option>
+                  <label htmlFor="expenseType" className="text-sm mb-1">Tipo de gasto</label>
+                  <Field name="expenseType" as="select" className="border border-gray-300 p-2 rounded-md">
+                    <option value="MANDATORY">Necesario</option>
+                    <option value="UNNECESSARY">Prescindible</option>
                   </Field>
-                  <ErrorMessage name="spentType" component="div" className="text-red-500 text-sm" />
+                  <ErrorMessage name="expenseType" component="div" className="text-red-500 text-sm" />
                 </div>
                 <div className="flex flex-col mb-5">
-                  <label htmlFor="amount" className="text-sm mb-1">Cantidad</label>
-                  <Field name="amount" type="number" className="border border-gray-300 p-2 rounded-md" />
-                  <ErrorMessage name="amount" component="div" className="text-red-500 text-sm" />
+                  <label htmlFor="quantity" className="text-sm mb-1">Cantidad</label>
+                  <Field name="quantity" type="number" className="border border-gray-300 p-2 rounded-md" />
+                  <ErrorMessage name="quantity" component="div" className="text-red-500 text-sm" />
                 </div>
                 <div className="flex flex-col mb-5">
                   <label htmlFor="description" className="text-sm mb-1">Descripción</label>
@@ -121,15 +123,15 @@ const page = () => {
                 <div className="flex flex-col mb-5">
                   <label htmlFor="investmentType" className="text-sm mb-1">Tipo de inversión</label>
                   <Field name="investmentType" as="select" className="border border-gray-300 p-2 rounded-md">
-                    <option value="benefit">Beneficio de inversiones</option>
-                    <option value="spent">Voy a invertir dinero</option>
+                    <option value="BENEFIT">Beneficio de inversiones</option>
+                    <option value="INVESTMENT">Voy a invertir dinero</option>
                   </Field>
                   <ErrorMessage name="investmentType" component="div" className="text-red-500 text-sm" />
                 </div>
                 <div className="flex flex-col mb-5">
-                  <label htmlFor="amount" className="text-sm mb-1">Cantidad</label>
-                  <Field name="amount" type="number" className="border border-gray-300 p-2 rounded-md" />
-                  <ErrorMessage name="amount" component="div" className="text-red-500 text-sm" />
+                  <label htmlFor="quantity" className="text-sm mb-1">Cantidad</label>
+                  <Field name="quantity" type="number" className="border border-gray-300 p-2 rounded-md" />
+                  <ErrorMessage name="quantity" component="div" className="text-red-500 text-sm" />
                 </div>
                 <div className="flex flex-col mb-5">
                   <label htmlFor="description" className="text-sm mb-1">Descripción</label>
@@ -144,7 +146,7 @@ const page = () => {
               </>
             )}
 
-            <button type="submit" className="bg-red-400 text-white py-2 px-4 rounded-md hover:bg-red-500 transition duration-300 ease-in-out">Añadir movimiento</button>
+            <button type="submit" className="bg-red-400 text-white py-2 px-4 rounded-md hover:bg-red-500 transition duration-300 ease-in-out">Actualizar movimiento</button>
           </Form>
         )}
       </Formik>
