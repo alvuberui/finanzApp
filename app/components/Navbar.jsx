@@ -60,7 +60,7 @@ const Navbar = () => {
                 ) : isLogged === true? (
                   <>
                     <Link href="/transaction/create" ><i className="material-icons text-4xl rounded-full bg-gradient-to-r from-red-400 to-yellow-500 text-black p-2 mr-3 hover:scale-110 transition-transform" style={{ cursor: 'pointer' }}>add</i></Link>
-                    <i className="material-icons text-4xl rounded-full bg-gradient-to-r from-red-400 to-yellow-500 text-black p-2 mr-3 hover:scale-110 transition-transform" style={{ cursor: 'pointer' }}>person</i>
+                    <Link href="/account" ><i className="material-icons text-4xl rounded-full bg-gradient-to-r from-red-400 to-yellow-500 text-black p-2 mr-3 hover:scale-110 transition-transform" style={{ cursor: 'pointer' }}>person</i></Link>
                     <i onClick={onLogout} className="material-icons text-4xl rounded-full bg-gradient-to-r from-red-400 to-yellow-500 text-black p-2 mr-3 hover:scale-110 transition-transform" style={{ cursor: 'pointer' }}>logout</i>
                   </>
                 ) : null }
