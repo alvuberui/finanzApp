@@ -6,10 +6,23 @@ import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css'; 
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from 'react';
 export default function AccountData() {
   const router = useRouter();
-  const { deleteAccount } = useAuth();
+  const { deleteAccount, updateAccount, getDataFromToken } = useAuth();
+  const [ userData , setUserData ] = useState(null);
+  const [ isLoaded, setIsLoaded ] = useState(false);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const user = await getDataFromToken();
+      user.birthDate = new Date(user.birthDate).toISOString().split('T')[0];
+      setUserData(user);
+      setIsLoaded(true);
+    }
+    fetchData();
+  }, []);
+  console.log(userData)
   const handleDeleteAccount = async () => {
     confirmAlert({
       title: '¿Seguro que deseas eliminar tu cuenta?',
@@ -31,11 +44,20 @@ export default function AccountData() {
       ]
     });
   }
-
+  
+  if(!isLoaded) {
+    return (
+      <main style={{ width: '100%' }} className="flex min-h-screen flex-col items-center justify-between pt-5 bg-white">
+        <div className="flex flex-col w-full max-w-md bg-white rounded-lg shadow-md p-8">
+          <h1 className="text-3xl font-bold text-center mb-5">Cargando...</h1>
+        </div>
+      </main>
+    );
+  } else {
   return (
     <main style={{ width: '100%' }} className="flex min-h-screen flex-col items-center justify-between pt-5 bg-white">
       <Formik
-        initialValues={{ email: '', password: '', confirmPassword: '' }}
+        initialValues={{ name: userData.name, firstName: userData.firstName, lastName: userData.lastName, birthDate: userData.birthDate, currentMoney: userData.currentMoney, email: userData.email}}
         validationSchema={Yup.object({
           name: Yup.string().required('Campo obligatorio'),
           firstName: Yup.string().required('Campo obligatorio'),
@@ -44,8 +66,11 @@ export default function AccountData() {
           currentMoney: Yup.number().required('Campo obligatorio'),
           email: Yup.string().email('Email inválido').required('Campo obligatorio'),
         })}
-        onSubmit={(values, { setSubmitting }) => {
-          setSubmitting(false);
+        onSubmit={(values) => {
+          const response = updateAccount(values);
+          if(response) {
+            router.push('/home');
+          }
         }}
       >
         <Form className="mx-auto my-auto flex flex-col w-full max-w-md bg-white rounded-lg shadow-md p-8">
@@ -96,5 +121,6 @@ export default function AccountData() {
       </div>
     </main>
   );
+}
 
 }

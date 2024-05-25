@@ -57,11 +57,45 @@ export function useAuth() {
     }
   };
 
+  const updateAccountHandler = async (values) => {
+    try {
+      const response = await axios.put("/api/auth/user", values);
+      localStorage.setItem("user", response.data.data);
+      dispatch(login(response.data.data));
+      toast.success(response.data.message);
+      return response.data.data;
+    } catch (error) {
+      toast.error(error.response.data.error);
+    }
+  };
+
+  const getDataFromToken = async () => {
+    try {
+      const response = await axios.get("/api/auth/user");
+      return response.data.data;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const changePasswordHandler = async (values) => {
+    try {
+      const response = await axios.patch("/api/auth/user", values);
+      toast.success(response.data.message);
+      return true;
+    } catch (error) {
+      toast.error(error.response.data.error);
+    }
+  };
+
   return {
     login: loginHandler,
     logout: logoutHandler,
     signup: signupHandler,
     deleteAccount: deleteAccountHandler,
+    updateAccount: updateAccountHandler,
+    getDataFromToken,
+    changePassword: changePasswordHandler,
   };
 }
 export default useAuth;
