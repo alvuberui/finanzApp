@@ -16,10 +16,10 @@ const Dashboard = () => {
   const [annualOption, setAnnualOption] = useState(0);
   const [historicalOption, setHistoricalOption] = useState(0);
   const [monthSelected, setMonthSelected] = useState('');
-  const [transactions, setTransactions] = useState({});
+  const [transactions, setTransactions] = useState([]);
   const [ isLoading, setIsLoading ] = useState(true);
 
-  const { getAllTransactions, deleteTransaction } = useTransaction();
+  const { getTransactionsByMonth, deleteTransaction } = useTransaction();
 
   const handleDeleteTransaction = async (type, id) => {
     const res = await deleteTransaction(type, id);
@@ -32,7 +32,10 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const data = await getAllTransactions();
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+        const data = await getTransactionsByMonth(year, month);
         setTransactions(data);
         setIsLoading(false);
       } catch (error) {
@@ -73,15 +76,14 @@ const Dashboard = () => {
                 <ButtonsMenu setFunction={setTypeSelected} state={typeSelected} listNames={['Listado', 'Rosca', 'Barras']} />
               </div>
             </div>
-            {typeSelected === 0 && transactions[monthSelected.slice(0, 4)] && transactions[monthSelected.slice(0, 4)][monthSelected.slice(5, 7)] ? 
-              transactions[monthSelected.slice(0, 4)][monthSelected.slice(5, 7)].map((transaction) => (
-                <MonthCard values={transaction} handleDelete={handleDeleteTransaction} key={transaction._id} />
-              )) : 
-              !isLoading &&
+            {typeSelected === 0 && Array.isArray(transactions) && transactions.map((transaction) => (
+      <MonthCard values={transaction} handleDelete={handleDeleteTransaction} key={transaction._id} />
+    ))}
+              {!isLoading &&
               <div className="mx-2 my-6 flex justify-center  mb-4">
                       <p className="text-black-900 font-light mt-10">No hay transacciones para este mes</p>
               </div>
-            }
+              }
             {typeSelected === 1 &&
               <MonthDonut />
             }

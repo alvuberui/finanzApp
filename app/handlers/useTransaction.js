@@ -32,9 +32,9 @@ export function useTransaction() {
     }
   };
 
-  const getAllTransactions = async () => {
+  const getTransactionsByMonth = async (year, month) => {
     try {
-      const response = await axios.get("/api/transaction");
+      const response = await axios.get("/api/transaction/search/" + year + "/" + month);
       return response.data.data;
     } catch (error) {
       toast.error(error.response.data.error);
@@ -77,7 +77,7 @@ export function useTransaction() {
     createBenefitTransaction,
     createExpenseTransaction,
     createInvestmentTransaction,
-    getAllTransactions,
+    getTransactionsByMonth,
     getTransactionByTypeAndId,
     updateTransaction,
     deleteTransaction,
