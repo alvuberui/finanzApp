@@ -43,18 +43,12 @@ export default function Home() {
                   password: Yup.string().required('La contraseña es requerida'),
                 })}
                 onSubmit={async (values) => {
-                  try {
                     setLoading(true);
-                    await login(values);
-                    router.push("/home");
-                    setLoading(false);
-                  } catch (error) {
-                    /*
-                     * Falta mostrar erro en popup
-                      */
-                  } finally {
-                    setLoading(false);
-                  }
+                    const response = await login(values);
+                    if(response) {
+                      router.push('/home');
+                      setLoading(false);
+                    }
                 }}
               >
                 <Form className="flex flex-col items-center">

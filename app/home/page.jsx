@@ -32,19 +32,20 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
-        const currentDate = new Date();
-        const year = currentDate.getFullYear();
-        const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-        const data = await getTransactionsByMonth(year, month);
-        setTransactions(data);
-        setIsLoading(false);
+        if ( monthSelected !== '' ) {
+          const year = parseInt(monthSelected.split('-')[0]);
+          const month = monthSelected.split('-')[1];
+          const data = await getTransactionsByMonth(year, month);
+          setTransactions(data);
+          setIsLoading(false);
+        }
       } catch (error) {
         console.error('Error fetching transactions:', error);
       }
     };
 
     fetchTransactions();
-  }, []);
+  }, [monthSelected]);
 
   useEffect(() => {
     const currentDate = new Date();
@@ -79,16 +80,16 @@ const Dashboard = () => {
             {typeSelected === 0 && Array.isArray(transactions) && transactions.map((transaction) => (
       <MonthCard values={transaction} handleDelete={handleDeleteTransaction} key={transaction._id} />
     ))}
-              {!isLoading &&
+              {!isLoading && transactions.length === 0 &&
               <div className="mx-2 my-6 flex justify-center  mb-4">
                       <p className="text-black-900 font-light mt-10">No hay transacciones para este mes</p>
               </div>
               }
             {typeSelected === 1 &&
-              <MonthDonut />
+              <MonthDonut transactions={transactions} />
             }
             {typeSelected === 2 &&
-              <MonthBard />
+              <MonthBard transactions={transactions} />
             }
           </>
           : selectedOption === 1 ?

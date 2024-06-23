@@ -145,7 +145,6 @@ export async function PATCH(request) {
     });
   } catch (error) {
     return NextResponse.json(
-      console.log(error),
       { error: "Error inesperado, por favor, contacte con soporte." },
       { status: 400 }
     );

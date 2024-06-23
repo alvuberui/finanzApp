@@ -24,7 +24,6 @@ async function GET(request, { params }) {
     switch (type) {
       case "benefit":
         const benefit = await BenefitTransaction.findOne({ _id: id, userId });
-        console.log(benefit);
         return NextResponse.json({
           data: benefit,
           success: true,
@@ -71,7 +70,6 @@ async function PUT(request, { params }) {
     const { type, id } = params;
     const body = await request.json();
     let transaction;
-    console.log(body);
 
     switch (type) {
       case "benefit":

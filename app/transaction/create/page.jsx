@@ -33,7 +33,6 @@ const page = () => {
             case 'benefit':
               const finalBenefit = { "quantity": values.amount, "description": values.description, "date": values.date };
               const resBenefit = await createBenefitTransaction(finalBenefit);
-              console.log(resBenefit);
               if(resBenefit) {
                 router.push('/home');
               }

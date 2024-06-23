@@ -27,14 +27,12 @@ export function useAuth() {
       dispatch(logout());
       toast.success(response.data.message);
     } catch (error) {
-      console.log(error);
       toast.error("Algo ha salido mal. Por favor, inténtalo de nuevo");
     }
   };
 
   const signupHandler = async (values) => {
     try {
-      console.log(values);
       const response = await axios.post("/api/auth/signup", values);
       localStorage.setItem("isLogged", true);
       localStorage.setItem("user", response.data.user);
@@ -74,7 +72,7 @@ export function useAuth() {
       const response = await axios.get("/api/auth/user");
       return response.data.data;
     } catch (error) {
-      console.log(error);
+      toast.error(error.response.data.error);
     }
   };
 

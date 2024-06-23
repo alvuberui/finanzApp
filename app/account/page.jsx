@@ -22,7 +22,6 @@ export default function AccountData() {
     }
     fetchData();
   }, []);
-  console.log(userData)
   const handleDeleteAccount = async () => {
     confirmAlert({
       title: '¿Seguro que deseas eliminar tu cuenta?',
