@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from 'react';
 import * as Yup from 'yup';
 
-const page = ({params}) => {
+const Page = ({params}) => {
   const router = useRouter();
   const { type, id } = params;
   const [ oldTransactions, setOldTransactions ] = useState();
@@ -154,4 +154,4 @@ const page = ({params}) => {
   );
 }
 
-export default page
+export default Page;
