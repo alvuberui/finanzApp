@@ -72,7 +72,7 @@ const MonthDonut = ({ transactions }) => {
 
         const benefitInvestment = investmentBenefit.reduce((acc, curr) => acc + curr.quantity, 0);
         const benefitAmount = benefit.reduce((acc, curr) => acc + curr.quantity, 0);
-        const totalBenefit = benefit.reduce((acc, curr) => acc + curr.quantity, 0) + benefitInvestment;
+        const totalBenefit = benefitAmount + benefitInvestment;
         const innecesaryAmount = innecesary.reduce((acc, curr) => acc + curr.quantity, 0);
         const necessaryAmount = necessary.reduce((acc, curr) => acc + curr.quantity, 0);
         const totalExpense = innecesaryAmount + necessaryAmount;
@@ -85,7 +85,7 @@ const MonthDonut = ({ transactions }) => {
         const savingPercentage = (savingAmount * 100) / totalBenefit;
 
         data.datasets[0].data = [innecesaryPercentage, savingPercentage, investmentPercentage, necessaryPercentage];
-        setElementList([totalBenefit, totalExpense, innecesaryAmount, necessaryAmount, benefitInvestment, investmentAmount, savingAmount]);
+        setElementList([benefitAmount, totalBenefit, totalExpense, innecesaryAmount, necessaryAmount, benefitInvestment, investmentAmount, savingAmount]);
         setRealData(data);
 
         // IDEAL LIST ELEMENTS
@@ -94,7 +94,7 @@ const MonthDonut = ({ transactions }) => {
         const idealInnecesaryAmount = (totalBenefit * 0.15).toFixed(2);
         const idealInvestmentAmount = (totalBenefit * 0.1).toFixed(2);
         const idealSavingAmount = (totalBenefit * 0.35).toFixed(2);
-        setIdealList([totalBenefit, idealTotalExpense, idealInnecesaryAmount, idealNecessaryAmount, idealInvestmentAmount, idealSavingAmount]);
+        setIdealList([ benefitAmount, totalBenefit, idealTotalExpense, idealInnecesaryAmount, idealNecessaryAmount, idealInvestmentAmount, idealSavingAmount]);
 
 
 
@@ -113,7 +113,7 @@ const MonthDonut = ({ transactions }) => {
                         <div className="flex justify-center items-center">
                             <ListElements
                                 colors={['bg-black', 'bg-red-900', 'bg-red-400', 'bg-lime-400', 'bg-pink-500', 'bg-yellow-500', 'bg-blue-400']}
-                                titles={['Beneficio total:', 'Gastos totales:', 'Gastos innecesarios:', 'Gastos necesarios:', 'Resultados inversiones:', 'Dinero invertido:', 'Ahorro:']}
+                                titles={['Beneficio', 'Beneficio total:', 'Gastos totales:', 'Gastos innecesarios:', 'Gastos necesarios:', 'Resultados inversiones:', 'Dinero invertido:', 'Ahorro:']}
                                 values={elementList}
                             />
                         </div>
@@ -127,8 +127,8 @@ const MonthDonut = ({ transactions }) => {
                         </div>
                         <div className="flex justify-center items-center mb-8">
                             <ListElements
-                                colors={['bg-black', 'bg-red-900', 'bg-red-400', 'bg-lime-400', 'bg-yellow-500', 'bg-blue-400']}
-                                titles={['Beneficio total:', 'Gastos totales:', 'Gastos innecesarios:', 'Gastos necesarios:', 'Dinero invertido:', 'Ahorro:']}
+                                colors={['bg-black', 'bg-red-900', 'bg-red-400', 'bg-lime-400', 'bg-pink-500', 'bg-blue-400']}
+                                titles={['Beneficio', 'Beneficio total:', 'Gastos totales:', 'Gastos innecesarios:', 'Gastos necesarios:', 'Dinero invertido:', 'Ahorro:']}
                                 values={idealList}
                             />
                         </div>

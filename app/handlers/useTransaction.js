@@ -73,6 +73,24 @@ export function useTransaction() {
     }
   };
 
+  const getTransactionsByYear = async (year) => {
+    try {
+      const response = await axios.get(`/api/transaction/search/${year}`);
+      return response.data.data;
+    } catch (error) {
+      toast.error(error.response.data.error);
+    }
+  }
+
+  const getAllTransactions = async () => {
+    try {
+      const response = await axios.get("/api/transaction");
+      return response.data.data;
+    } catch (error) {
+      toast.error(error.response.data.error);
+    }
+  };
+
   return {
     createBenefitTransaction,
     createExpenseTransaction,
@@ -81,6 +99,8 @@ export function useTransaction() {
     getTransactionByTypeAndId,
     updateTransaction,
     deleteTransaction,
+    getTransactionsByYear,
+    getAllTransactions,
   };
 }
 export default useTransaction;
