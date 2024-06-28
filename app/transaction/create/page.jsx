@@ -4,7 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useRouter } from "next/navigation";
 import * as Yup from 'yup';
 
-const page = () => {
+const Page = () => {
 
   const router = useRouter();
 
@@ -151,4 +151,4 @@ const page = () => {
   );
 }
 
-export default page
+export default Page;
