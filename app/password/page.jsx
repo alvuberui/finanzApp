@@ -1,21 +1,28 @@
 'use client';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import useAuth from '../handlers/useAuth';
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+
+  const { changePassword } = useAuth();
+  const router = useRouter();
 
   return (
     <main style={{ width: '100%' }} className="flex min-h-screen flex-col items-center justify-between pt-5 bg-white">
       <Formik
-        initialValues={{ email: '', password: '', confirmPassword: '' }}
+        initialValues={{ currentPassword: '', newPassword: '', confirmPassword: '' }}
         validationSchema={Yup.object({
           currentPassword: Yup.string().min(6, 'Debe de contener al menos 6 caracteres').required('Campo obligatorio'),
           newPassword: Yup.string().min(6, 'Debe de contener al menos 6 caracteres').required('Campo obligatorio'),
-          confirmPassword: Yup.string().oneOf([Yup.ref('password'), null], 'Las contraseñas deben coincidir').required('Campo obligatorio'),
+          confirmPassword: Yup.string().oneOf([Yup.ref('newPassword'), null], 'Las contraseñas deben coincidir').required('Campo obligatorio'),
         })}
-        onSubmit={(values, { setSubmitting }) => {
-          console.log(values);
-          setSubmitting(false);
+        onSubmit={(values) => {
+          const response = changePassword(values);
+          if(response) {
+            router.push('/home');
+          }
         }}
       >
         <Form className="my-auto mb-auto flex flex-col w-full max-w-md bg-white rounded-lg shadow-md p-8">

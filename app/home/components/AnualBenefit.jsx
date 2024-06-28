@@ -1,7 +1,7 @@
 'use client';
-import { ListElements } from '@/app/components';
 
 import { ArcElement, BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from 'chart.js';
+import { useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
 
 ChartJS.register(ArcElement, Legend, CategoryScale,
@@ -10,20 +10,15 @@ ChartJS.register(ArcElement, Legend, CategoryScale,
     Title,
     Tooltip,);
 
-const AnualBenefit = () => {
-  const labels = ['Gastos totales', 'Gastos necesarios', 'gastos innecesarios', 'Dinero invertido', 'Ahorro'];
+const AnualBenefit = ({transactions}) => {
+  const labels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
-    const data_bar = {
+    let data_bar = {
         labels,
         datasets: [
             {
-                label: 'Valores objetivo',
-                data: [-100, 10, 20, 30, 40, 50, 60],
-                backgroundColor: 'rgba(255, 99, 132, 0.5)',
-            },
-            {
                 label: 'Valores reales',
-                data: [10, 20, 30, 40, 50, 60, 70],
+                data: [0, 0, 0, 0, 0, 0, 0],
                 backgroundColor: 'rgba(53, 162, 235, 0.5)',
             },
         ],
@@ -41,6 +36,16 @@ const AnualBenefit = () => {
           },
         },
       };
+
+      useEffect(() => {
+        const months = transactions.reduce((acc, transaction) => {
+            const month = new Date(transaction.date).getMonth();
+            acc[month] += transaction.quantity;
+            return acc;
+        }, new Array(12).fill(0));
+        data_bar.datasets[0].data = months;
+      }, [transactions]);
+
     
     return (
         <div className="flex my-6 justify-center items-center text-center ">

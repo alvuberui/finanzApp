@@ -1,5 +1,6 @@
 'use client';
 
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,6 +11,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { useEffect, useState } from 'react';
 import { Line } from 'react-chartjs-2';
 
 ChartJS.register(
@@ -35,35 +37,58 @@ export const options = {
   },
 };
 
-const HistoricalDividends = () => {
-  const labels = ['2023', '2024'];
-
-  const data = {
-    labels,
+const HistoricalDividends = ({ transactions }) => {
+  const staticData = {
+    labels: [],
     datasets: [
       {
-        label: 'Dataset 1',
-        data: [25000, 50000],
-        borderColor: 'rgb(255, 99, 132)',
-        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-      },
-      {
-        label: 'Dataset 2',
-        data: [30000, 45000],
+        label: 'Beneficios por año',
+        data: [],
         borderColor: 'rgb(53, 162, 235)',
         backgroundColor: 'rgba(53, 162, 235, 0.5)',
       },
     ],
   };
 
+  const [data, setData] = useState(staticData);
+
+  useEffect(() => {
+    const keys = Object.keys(transactions);
+    const list = [];
+
+    keys.forEach((key) => {
+      let quantity = 0;
+      transactions[key].forEach((transaction) => {
+        if(transaction.type === 'investment' && transaction.investmentType === 'BENEFIT') {
+          quantity += transaction.quantity;
+        }
+      });
+      list.push(quantity);
+    });
+
+    // Crear una copia de staticData para actualizar el estado
+    const updatedData = {
+      ...staticData,
+      labels: keys,
+      datasets: [
+        {
+          ...staticData.datasets[0],
+          data: list,
+        },
+      ],
+    };
+
+    setData(updatedData);
+  }, [transactions]);
+
   return (
     <div className="flex my-6 justify-center items-center text-center ">
-            <div className="rounded-lg overflow-hidden border border-gray-300 my-2 lg:w-1/2 w-full shadow-lg chart-container">
-                <h2 className="text-center mt-2 mb-2 text-2xl font-bold text-gray-900">Comparación de datos</h2>
-                <Line options={options} data={data} />
-            </div>
-        </div>
-  )
-}
+      <div className="rounded-lg overflow-hidden border border-gray-300 my-2 lg:w-1/2 w-full shadow-lg chart-container">
+        <h2 className="text-center mt-2 mb-2 text-2xl font-bold text-gray-900">Comparación de datos</h2>
+        <Line options={options} data={data} />
+      </div>
+    </div>
+  );
+};
 
 export default HistoricalDividends

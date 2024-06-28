@@ -1,11 +1,23 @@
 'use client';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import React from 'react';
+import React, { useState } from 'react';
 import InfoHome from './components/InfoHome';
 import Link from 'next/link';
 
+import { useRouter } from "next/navigation";
+
+import { useAuth } from "./handlers/useAuth";
+import { ToastContainer } from 'react-toastify';
+
+
 export default function Home() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const { login } = useAuth();
+
+
+
 
   return (
     <main style={{ width: '100%' }} className="flex min-h-screen flex-col items-center justify-between pt-10">
@@ -27,14 +39,16 @@ export default function Home() {
               <Formik
                 initialValues={{ email: '', password: '' }}
                 validationSchema={Yup.object({
-                  email: Yup.string().email('Email invalido').required('El email es requerido'),
+                  email: Yup.string().email('Email inválido').required('El email es requerido'),
                   password: Yup.string().required('La contraseña es requerida'),
                 })}
-                onSubmit={(values, { setSubmitting }) => {
-                  setTimeout(() => {
-                    alert(JSON.stringify(values, null, 2));
-                    setSubmitting(false);
-                  }, 400);
+                onSubmit={async (values) => {
+                    setLoading(true);
+                    const response = await login(values);
+                    if(response) {
+                      router.push('/home');
+                      setLoading(false);
+                    }
                 }}
               >
                 <Form className="flex flex-col items-center">

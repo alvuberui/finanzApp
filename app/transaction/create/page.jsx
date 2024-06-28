@@ -1,17 +1,24 @@
 'use client';
+import useTransaction from '@/app/handlers/useTransaction';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { useRouter } from "next/navigation";
 import * as Yup from 'yup';
 
 const page = () => {
+
+  const router = useRouter();
+
+  const { createBenefitTransaction, createExpenseTransaction, createInvestmentTransaction } = useTransaction();
+
   return (
     <main style={{ width: '100%' }} className="flex min-h-screen flex-col items-center justify-between pt-5 bg-white">
       <Formik
-        initialValues={{ movementType: 'benefit', amount: '', description: '', date: '', spentType: 'necessary', investmentType: 'benefit' }}
+        initialValues={{ movementType: 'benefit', amount: '1', description: '', date: new Date().toISOString().substring(0, 10) , spentType: 'necessary', investmentType: 'benefit' }}
         const validationSchema = { Yup.object({
           movementType: Yup.string().required('El tipo de movimiento es requerido'),
-          amount: Yup.number().required('La cantidad es requerida'),
-          description: Yup.string().required('La descripción es requerida'),
-          date: Yup.string().required('La fecha es requerida'),
+          amount: Yup.number().required('La cantidad es requerida').min(1, 'Debe de ser mayor a 0'),
+          description: Yup.string().required('La descripción es requerida').max(100, 'Máximo 100 caracteres'),
+          date: Yup.date().required('La fecha es requerida').max(new Date(), 'La fecha no puede ser futura'),
           investmentType: Yup.string().when('movementType', {
             is: (val) => val === 'investment',
             then: () => Yup.string().required('El tipo de inversión es requerido'),
@@ -20,13 +27,31 @@ const page = () => {
             is: (val) => val === 'spent',
             then: () => Yup.string().required('El tipo de gasto es requerido'),
           }),
-          
         })}
-        
-        
-        onSubmit={(values, { setSubmitting }) => {
-          console.log(values);
-          setSubmitting(false);
+        onSubmit={async (values) => {
+          switch (values.movementType) {
+            case 'benefit':
+              const finalBenefit = { "quantity": values.amount, "description": values.description, "date": values.date };
+              const resBenefit = await createBenefitTransaction(finalBenefit);
+              if(resBenefit) {
+                router.push('/home');
+              }
+              break;
+            case 'spent':
+              const finalExpense = { "quantity": values.amount, "description": values.description, "date": values.date, "expenseType": values.spentType === 'necessary' ? 'MANDATORY' : 'UNNECESSARY'};
+              const resExpense = await createExpenseTransaction(finalExpense);
+              if(resExpense) {
+                router.push('/home');
+              }
+              break;
+            case 'investment':
+              const finalInvestment = { "quantity": values.amount, "description": values.description, "date": values.date, "investmentType": values.investmentType === 'benefit' ? 'BENEFIT' : 'INVESTMENT'};
+              const resInvestment = await createInvestmentTransaction(finalInvestment);
+              if(resInvestment) {
+                router.push('/home');
+              }
+              break;
+          }
         }}
       >
         {formik => (

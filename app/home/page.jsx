@@ -1,12 +1,13 @@
 'use client';
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ButtonsMenu, DatePickerMonth, DatePickerYear } from "../components";
-
+import { useSelector, useDispatch } from "react-redux";
 import { AnualBenefit, AnualBills, AnualDividend, AnualInnecesary, AnualInvestment, AnualNecessary, AnualReview, HistorialReview, HistoricalBenefits, HistoricalBills, HistoricalDividends, HistoricalUnnecesary, MonthBard, MonthCard, MonthDonut } from "./components";
 import HistoricalNecessary from "./components/HistoricalNecessary";
 import HistoricalInvestment from "./components/HistoricalInvestment";
 import HistoricalMoney from "./components/HistoricalMoney";
+import useTransaction from "../handlers/useTransaction";
 
 const Dashboard = () => {
 
@@ -14,7 +15,58 @@ const Dashboard = () => {
   const [typeSelected, setTypeSelected] = useState(0);
   const [annualOption, setAnnualOption] = useState(0);
   const [historicalOption, setHistoricalOption] = useState(0);
+  const [monthSelected, setMonthSelected] = useState('');
+  const [transactions, setTransactions] = useState([]);
+  const [ isLoading, setIsLoading ] = useState(true);
+  const [ allTransactions, setAllTransactions ] = useState([]);
 
+  const { getTransactionsByMonth, deleteTransaction, getAllTransactions } = useTransaction();
+
+  const handleDeleteTransaction = async (type, id) => {
+    const res = await deleteTransaction(type, id);
+    if(res) {
+      const data = await getAllTransactions();
+      setTransactions(data);
+    }
+  }
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        if ( monthSelected !== '' ) {
+          const year = parseInt(monthSelected.split('-')[0]);
+          const month = monthSelected.split('-')[1];
+          const data = await getTransactionsByMonth(year, month);
+          setTransactions(data);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.error('Error fetching transactions:', error);
+      }
+    };
+
+    fetchTransactions();
+  }, [monthSelected]);
+
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        const data = await getAllTransactions();
+        setAllTransactions(data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error fetching transactions:', error);
+      }
+    };
+    fetchTransactions();
+  }, []);
+
+  useEffect(() => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
+    setMonthSelected(`${year}-${month}`);
+  }, []);
 
   return (
     <main className="flex min-h-screen w-full flex-col items-center justify-between pt-5 bg-white">
@@ -27,67 +79,65 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
-  
-        {selectedOption === 0 &&
-          <div className="mx-auto w-max mb-5">
-            <div className="rounded-lg overflow-hidden bg-white flex items-center border border-gray-300 shadow-lg">
-              <DatePickerMonth />
-            </div>
-          </div>
-        }
-  
-        {selectedOption === 1 &&
-          <div className="mx-auto w-max mb-5">
-            <div className="rounded-lg overflow-hidden bg-white flex items-center border border-gray-300 shadow-lg">
-              <DatePickerYear />
-            </div>
-          </div>
-        }
-  
         {selectedOption === 0 ?
           <>
+            <div className="mx-auto w-max mb-5">
+            <div className="rounded-lg overflow-hidden bg-white flex items-center border border-gray-300 shadow-lg">
+              <DatePickerMonth monthSelected={monthSelected} setMonthSelected={setMonthSelected}/>
+            </div>
+          </div>
             <div className="mx-auto w-max">
               <div className="rounded-lg overflow-hidden shadow-xl bg-white flex">
                 <ButtonsMenu setFunction={setTypeSelected} state={typeSelected} listNames={['Listado', 'Rosca', 'Barras']} />
               </div>
             </div>
-            {typeSelected === 0 &&
-              <MonthCard />
-            }
+            {typeSelected === 0 && Array.isArray(transactions) && transactions.map((transaction) => (
+      <MonthCard values={transaction} handleDelete={handleDeleteTransaction} key={transaction._id} />
+    ))}
+              {!isLoading && transactions.length === 0 &&
+              <div className="mx-2 my-6 flex justify-center  mb-4">
+                      <p className="text-black-900 font-light mt-10">No hay transacciones para este mes</p>
+              </div>
+              }
             {typeSelected === 1 &&
-              <MonthDonut />
+              <MonthDonut transactions={transactions} />
             }
             {typeSelected === 2 &&
-              <MonthBard />
+              <MonthBard transactions={transactions} />
             }
           </>
           : selectedOption === 1 ?
             <>
+              <div className="mx-auto w-max mb-5">
+                <div className="rounded-lg overflow-hidden bg-white flex items-center border border-gray-300 shadow-lg">
+                  <DatePickerYear setTransactions={setTransactions}  />
+                </div>
+              </div>
               <div className="mx-auto w-max">
                 <div className="rounded-lg overflow-hidden shadow-xl bg-white flex">
                   <ButtonsMenu setFunction={setAnnualOption} state={annualOption} listNames={['Resumen', 'Beneficios', 'Gastos', 'Innecesarios', 'Necesarios', 'Inversion', 'Dividendos']} />
                 </div>
               </div>
               {annualOption === 0 &&
-                <AnualReview />
+                <AnualReview transactions={transactions} />
               }
               {annualOption === 1 &&
-                <AnualBenefit />
+                <AnualBenefit transactions={ transactions.filter((transaction) => transaction.type === 'benefit') } />
               }
               {annualOption === 2 &&
-                <AnualBills />
+                <AnualBills transactions={ transactions.filter((transaction) => transaction.type === 'expense')  } benefitTransactions={transactions.filter((transaction) => transaction.type === 'benefit')} investmentBenefitTransactions={transactions.filter((transaction) => transaction.type === 'investment' && transaction.investmentType === 'BENEFIT')}/>
               }
               {annualOption === 3 &&
-                <AnualInnecesary />
+                <AnualInnecesary transactions={ transactions.filter((transaction) => transaction.type === 'expense' && transaction.expenseType === 'UNNECESSARY') } benefitTransactions={transactions.filter((transaction) => transaction.type === 'benefit')} investmentBenefitTransactions={transactions.filter((transaction) => transaction.type === 'investment' && transaction.investmentType === 'BENEFIT')} />
               }
               {annualOption === 4 &&
-                <AnualNecessary />
+                <AnualNecessary transactions={ transactions.filter((transaction) => transaction.type === 'expense' && transaction.expenseType === 'MANDATORY') } benefitTransactions={transactions.filter((transaction) => transaction.type === 'benefit')} investmentBenefitTransactions={transactions.filter((transaction) => transaction.type === 'investment' && transaction.investmentType === 'BENEFIT')} />
               }
               {annualOption === 5 &&
-                <AnualInvestment />
+                <AnualInvestment  transactions={ transactions.filter((transaction) => transaction.type === 'investment' && transaction.investmentType === 'INVESTMENT') } benefitTransactions={transactions.filter((transaction) => transaction.type === 'benefit')} investmentBenefitTransactions={transactions.filter((transaction) => transaction.type === 'investment' && transaction.investmentType === 'BENEFIT')} />
               }
               {annualOption === 6 &&
-                <AnualDividend />
+                <AnualDividend transactions={ transactions.filter((transaction) => transaction.type === 'investment' && transaction.investmentType === 'BENEFIT') } benefitTransactions={transactions.filter((transaction) => transaction.type === 'benefit')} investmentBenefitTransactions={transactions.filter((transaction) => transaction.type === 'investment' && transaction.investmentType === 'BENEFIT')} />
               }
             </>
             :
@@ -98,28 +148,28 @@ const Dashboard = () => {
                 </div>
               </div>
               {historicalOption === 0 &&
-                <HistorialReview />
+                <HistorialReview transactions={allTransactions} />
               }
               {historicalOption === 1 &&
-                <HistoricalBenefits />
+                <HistoricalBenefits transactions={allTransactions} />
               }
               {historicalOption === 2 &&
-                <HistoricalBills />
+                <HistoricalBills transactions={allTransactions} />
               }
               {historicalOption === 3 &&
-                <HistoricalUnnecesary />
+                <HistoricalUnnecesary transactions={allTransactions}  />
               }
               {historicalOption === 4 &&
-                <HistoricalNecessary />
+                <HistoricalNecessary transactions={allTransactions} />
               }
               {historicalOption === 5 &&
-                <HistoricalInvestment />
+                <HistoricalInvestment transactions={allTransactions} />
               }
               {historicalOption === 6 &&
-                <HistoricalDividends />
+                <HistoricalDividends transactions={allTransactions}/>
               }
               {historicalOption === 7 &&
-                <HistoricalMoney />
+                <HistoricalMoney transactions={allTransactions}/>
               }
             </>
         }

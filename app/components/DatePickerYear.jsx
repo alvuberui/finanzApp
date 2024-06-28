@@ -1,10 +1,13 @@
 'use client';
 
 import { useEffect, useState } from "react";
+import useTransaction from "../handlers/useTransaction";
 
-const DatePickerYear = () => {
+const DatePickerYear = ({ setTransactions }) => {
 
     const [yearSelected, setYearSelected] = useState('');
+
+    const { getTransactionsByYear } = useTransaction();
 
     const handleYearChange = (e) => {
         setYearSelected(e.target.value);
@@ -23,6 +26,19 @@ const DatePickerYear = () => {
         const year = currentDate.getFullYear();
         setYearSelected(year);
     }, []);
+
+    useEffect(() => {
+        const fetchTransactions = async () => {
+                if (yearSelected !== '') {
+                    const data = await getTransactionsByYear(yearSelected);
+                    setTransactions(data);
+                }
+           
+        };
+
+        fetchTransactions();
+    }, [yearSelected]);
+
     return (
         <>  
             {
