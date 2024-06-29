@@ -3,6 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useRouter } from "next/navigation";
 import useAuth from '../handlers/useAuth';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function Home() {
 
