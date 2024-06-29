@@ -2,16 +2,19 @@
 import useTransaction from '@/app/handlers/useTransaction';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useRouter } from "next/navigation";
+import { useState } from 'react';
 import * as Yup from 'yup';
 
 const Page = () => {
 
   const router = useRouter();
+  const [ isLoading, setIsLoading ] = useState(false);
 
   const { createBenefitTransaction, createExpenseTransaction, createInvestmentTransaction } = useTransaction();
 
   return (
     <main style={{ width: '100%' }} className="flex min-h-screen flex-col items-center justify-between pt-5 bg-white">
+      {isLoading && <LoadingSpinner />}
       <Formik
         initialValues={{ movementType: 'benefit', amount: '1', description: '', date: new Date().toISOString().substring(0, 10) , spentType: 'necessary', investmentType: 'benefit' }}
         const validationSchema = { Yup.object({
@@ -31,22 +34,25 @@ const Page = () => {
         onSubmit={async (values) => {
           switch (values.movementType) {
             case 'benefit':
+              setIsLoading(true);
               const finalBenefit = { "quantity": values.amount, "description": values.description, "date": values.date };
-              const resBenefit = await createBenefitTransaction(finalBenefit);
+              const resBenefit = await createBenefitTransaction(finalBenefit, setIsLoading);
               if(resBenefit) {
                 router.push('/home');
               }
               break;
             case 'spent':
+              setIsLoading(true);
               const finalExpense = { "quantity": values.amount, "description": values.description, "date": values.date, "expenseType": values.spentType === 'necessary' ? 'MANDATORY' : 'UNNECESSARY'};
-              const resExpense = await createExpenseTransaction(finalExpense);
+              const resExpense = await createExpenseTransaction(finalExpense, setIsLoading);
               if(resExpense) {
                 router.push('/home');
               }
               break;
             case 'investment':
+              setIsLoading(true);
               const finalInvestment = { "quantity": values.amount, "description": values.description, "date": values.date, "investmentType": values.investmentType === 'benefit' ? 'BENEFIT' : 'INVESTMENT'};
-              const resInvestment = await createInvestmentTransaction(finalInvestment);
+              const resInvestment = await createInvestmentTransaction(finalInvestment, setIsLoading);
               if(resInvestment) {
                 router.push('/home');
               }

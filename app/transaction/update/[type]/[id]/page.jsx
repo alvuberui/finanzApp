@@ -1,4 +1,5 @@
 'use client';
+import LoadingSpinner from '@/app/components/LoadingSpinner';
 import useTransaction from '@/app/handlers/useTransaction';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useRouter } from "next/navigation";
@@ -10,11 +11,13 @@ const Page = ({params}) => {
   const { type, id } = params;
   const [ oldTransactions, setOldTransactions ] = useState();
   const { getTransactionByTypeAndId, updateTransaction } = useTransaction();
+  const [ isLoading, setIsLoading ] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
+      setIsLoading(true);
       if(type && id) {
-        const ot = await getTransactionByTypeAndId(type, id);
+        const ot = await getTransactionByTypeAndId(type, id, setIsLoading);
         if(ot) {
           const dateObj = new Date(ot.date).toISOString().slice(0, 10);
           ot.date = dateObj;
@@ -33,6 +36,7 @@ const Page = ({params}) => {
   } 
   return (
     <main style={{ width: '100%' }} className="flex min-h-screen flex-col items-center justify-between pt-5 bg-white">
+      { isLoading && <LoadingSpinner />}
       <Formik
         initialValues={{ movementType: oldTransactions.type, quantity: oldTransactions.quantity, description: oldTransactions.description, date: oldTransactions.date , expenseType: oldTransactions.expenseType, investmentType: oldTransactions.investmentType }}
         const validationSchema = { Yup.object({
@@ -50,7 +54,8 @@ const Page = ({params}) => {
           }),
         })}
         onSubmit={async (values) => {
-          const response = await updateTransaction(type, id, values);
+          setIsLoading(true);
+          const response = await updateTransaction(type, id, values, setIsLoading);
           if(response) {
             router.push('/home');
             setOldTransactions();

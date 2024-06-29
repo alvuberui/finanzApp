@@ -32,7 +32,7 @@ const AnualBenefit = ({transactions}) => {
           },
           title: {
             display: true,
-            text: 'Chart.js Bar Chart',
+            text: 'Beneficios anuales',
           },
         },
       };

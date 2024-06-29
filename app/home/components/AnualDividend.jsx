@@ -32,7 +32,7 @@ const AnualDividend = ({transactions, benefitTransactions, investmentBenefitTran
           },
           title: {
             display: true,
-            text: 'Chart.js Bar Chart',
+            text: 'Beneficio de inversiones anuales',
           },
         },
       };

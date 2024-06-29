@@ -8,6 +8,7 @@ import HistoricalNecessary from "./components/HistoricalNecessary";
 import HistoricalInvestment from "./components/HistoricalInvestment";
 import HistoricalMoney from "./components/HistoricalMoney";
 import useTransaction from "../handlers/useTransaction";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const Dashboard = () => {
 
@@ -17,28 +18,35 @@ const Dashboard = () => {
   const [historicalOption, setHistoricalOption] = useState(0);
   const [monthSelected, setMonthSelected] = useState('');
   const [transactions, setTransactions] = useState([]);
-  const [ isLoading, setIsLoading ] = useState(true);
+  const [ isLoading, setIsLoading ] = useState(false);
   const [ allTransactions, setAllTransactions ] = useState([]);
-
   const { getTransactionsByMonth, deleteTransaction, getAllTransactions } = useTransaction();
 
   const handleDeleteTransaction = async (type, id) => {
-    const res = await deleteTransaction(type, id);
-    if(res) {
-      const data = await getAllTransactions();
-      setTransactions(data);
+    // Mostrar el cuadro de confirmación
+    const confirmDelete = window.confirm("¿Estás seguro de que quieres eliminar esta transacción?");
+  
+    // Si el usuario confirma la eliminación, proceder
+    if (confirmDelete) {
+      const res = await deleteTransaction(type, id);
+      if(res) {
+        const newTransactions = transactions.filter(transaction => transaction._id !== id);
+        setTransactions(newTransactions);
+        const data = await getAllTransactions();
+        setAllTransactions(data);
+      }
     }
   }
 
   useEffect(() => {
     const fetchTransactions = async () => {
       try {
+        setIsLoading(true);
         if ( monthSelected !== '' ) {
           const year = parseInt(monthSelected.split('-')[0]);
           const month = monthSelected.split('-')[1];
-          const data = await getTransactionsByMonth(year, month);
+          const data = await getTransactionsByMonth(year, month, setIsLoading);
           setTransactions(data);
-          setIsLoading(false);
         }
       } catch (error) {
         console.error('Error fetching transactions:', error);
@@ -70,6 +78,7 @@ const Dashboard = () => {
 
   return (
     <main className="flex min-h-screen w-full flex-col items-center justify-between pt-5 bg-white">
+      { isLoading && <LoadingSpinner />}
       <div className="w-full">
         <div className="text-center mb-5">
           <h1 className="text-3xl font-bold mb-5">Dashboard</h1>

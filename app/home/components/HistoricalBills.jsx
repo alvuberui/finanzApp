@@ -43,7 +43,7 @@ const HistoricalBills = ({transactions}) => {
     labels:[],
     datasets: [
       {
-        label: 'Datos ideales',
+        label: 'Histórico de gastos',
         data: [],
         borderColor: 'rgb(255, 99, 132)',
         backgroundColor: 'rgba(255, 99, 132, 0.5)',

@@ -38,7 +38,7 @@ const AnualNecessary = ({transactions, benefitTransactions, investmentBenefitTra
           },
           title: {
             display: true,
-            text: 'Chart.js Bar Chart',
+            text: 'Gastos anuales necesarios',
           },
         },
       };

@@ -80,12 +80,13 @@ export async function PUT(request) {
         { status: 400 }
       );
     }
-    const isCorrect = await validateUpdateUser(await request.json());
+    const requestBody = await request.json();
+    const isCorrect = await validateUpdateUser(requestBody);
     if (isCorrect !== true) {
       return NextResponse.json({ error: isCorrect }, { status: 400 });
     }
-    const { name, firstName, lastName, birthDate, currentMoney, email } =
-      await request.json();
+
+    const { name, firstName, lastName, birthDate, currentMoney, email } = requestBody;
     user.name = name;
     user.firstName = firstName;
     user.lastName = lastName;
@@ -95,6 +96,8 @@ export async function PUT(request) {
     const updatedUser = await User.findOneAndReplace({ _id: userId }, user, {
       new: true,
     });
+
+    console.log(updatedUser);
 
     return NextResponse.json({
       message: "Datos actualizados correctamente",

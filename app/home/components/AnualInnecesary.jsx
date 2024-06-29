@@ -37,7 +37,7 @@ const AnualInnecesary = ({transactions, benefitTransactions, investmentBenefitTr
           },
           title: {
             display: true,
-            text: 'Chart.js Bar Chart',
+            text: 'Gastos innecearios anuales',
           },
         },
       };

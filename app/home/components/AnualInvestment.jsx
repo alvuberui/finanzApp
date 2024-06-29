@@ -38,7 +38,7 @@ const AnualInvestment = ({transactions, benefitTransactions, investmentBenefitTr
           },
           title: {
             display: true,
-            text: 'Chart.js Bar Chart',
+            text: 'Inversiones anuales',
           },
         },
       };
