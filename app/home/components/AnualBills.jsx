@@ -37,7 +37,7 @@ const AnualBills = ({transactions, benefitTransactions, investmentBenefitTransac
           },
           title: {
             display: true,
-            text: 'Chart.js Bar Chart',
+            text: 'Gastos anuales',
           },
         },
       };

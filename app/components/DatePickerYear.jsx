@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import useTransaction from "../handlers/useTransaction";
+import LoadingSpinner from "./LoadingSpinner";
 
 const DatePickerYear = ({ setTransactions }) => {
 
     const [yearSelected, setYearSelected] = useState('');
-
+    const [isLoading, setIsLoading] = useState(false);
     const { getTransactionsByYear } = useTransaction();
 
     const handleYearChange = (e) => {
@@ -14,6 +15,7 @@ const DatePickerYear = ({ setTransactions }) => {
     }
 
     const handleYearChangeByButton = (e) => {
+
         if (e.target.textContent === '<') {
             setYearSelected(yearSelected - 1);
         } else {
@@ -29,8 +31,9 @@ const DatePickerYear = ({ setTransactions }) => {
 
     useEffect(() => {
         const fetchTransactions = async () => {
+            setIsLoading(true);
                 if (yearSelected !== '') {
-                    const data = await getTransactionsByYear(yearSelected);
+                    const data = await getTransactionsByYear(yearSelected, setIsLoading);
                     setTransactions(data);
                 }
            
@@ -41,6 +44,7 @@ const DatePickerYear = ({ setTransactions }) => {
 
     return (
         <>  
+        { isLoading && <LoadingSpinner />}
             {
                 yearSelected === 2023 ?
                     <button onClick={handleYearChangeByButton} className="text-white  bg-black  px-5 h-full mr-2" disabled={yearSelected === 2023}>{'<'}</button>

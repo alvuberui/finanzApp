@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 
 import { useAuth } from "./handlers/useAuth";
 import { ToastContainer } from 'react-toastify';
+import LoadingSpinner from './components/LoadingSpinner';
 
 
 export default function Home() {
@@ -21,6 +22,7 @@ export default function Home() {
 
   return (
     <main style={{ width: '100%' }} className="flex min-h-screen flex-col items-center justify-between pt-10">
+      {loading && <LoadingSpinner />}
       <div style={{ width: '100%' }} className="flex items-center flex-col">
         <div className="flex justify-between flex-col w-full sm:w-[90%] md:w-[70%] lg:w-[70%] xl:w-[70%] max-w-[90%] sm:max-w-[90%] md:max-w-[70%] lg:max-w-[70%] xl:max-w-[70%]">
           <div className="flex justify-between flex-col sm:flex-row rounded p-5 bg-gray-100 shadow-lg">
@@ -44,10 +46,9 @@ export default function Home() {
                 })}
                 onSubmit={async (values) => {
                     setLoading(true);
-                    const response = await login(values);
+                    const response = await login(values, setLoading);
                     if(response) {
                       router.push('/home');
-                      setLoading(false);
                     }
                 }}
               >
@@ -100,6 +101,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      
     </main>
   );
 }

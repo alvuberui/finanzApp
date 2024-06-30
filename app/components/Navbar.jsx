@@ -7,12 +7,14 @@ import { useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import {LogoutHandlerComponent} from '../handlers/useAuth';
 import { useAuth } from "../handlers/useAuth";
+import LoadingSpinner from './LoadingSpinner';
 
 const Navbar = () => {
   const router = useRouter();
   const [isLogged, setIsLogged] = useState(null);
   const state = useSelector((state) => state.authSlice.isLogged);
   const { logout } = useAuth();
+  const [ isLoading, setIsLoading ] = useState(false);
 
   useEffect(() => {
     setIsLogged(state);
@@ -20,19 +22,15 @@ const Navbar = () => {
 
 
   const onLogout = async () => {
-    try {
-      await logout();
+      setIsLoading(true);
+      await logout(setIsLoading);
       router.push('/');
-    } catch (error) {
-      /*
-       * TODO: Falta mostrar erro en popup
-       */
-    }
   }
 
   return (
 
     <nav className="bg-lime-300 sticky top-0 z-50">
+      { isLoading && <LoadingSpinner/>}
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
 

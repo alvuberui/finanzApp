@@ -32,7 +32,7 @@ export const options = {
     },
     title: {
       display: true,
-      text: 'Datos ideales vs datos reales',
+      text: 'Histórico de ahorros',
     },
   },
 };

@@ -3,14 +3,18 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import useAuth from '../handlers/useAuth';
 import { useRouter } from "next/navigation";
+import LoadingSpinner from '../components/LoadingSpinner';
+import { useState } from 'react';
 
 export default function Home() {
 
   const { changePassword } = useAuth();
   const router = useRouter();
+  const [ isLoading, setIsLoading ] = useState(false);
 
   return (
     <main style={{ width: '100%' }} className="flex min-h-screen flex-col items-center justify-between pt-5 bg-white">
+      {isLoading && <LoadingSpinner />}
       <Formik
         initialValues={{ currentPassword: '', newPassword: '', confirmPassword: '' }}
         validationSchema={Yup.object({
@@ -19,7 +23,8 @@ export default function Home() {
           confirmPassword: Yup.string().oneOf([Yup.ref('newPassword'), null], 'Las contraseñas deben coincidir').required('Campo obligatorio'),
         })}
         onSubmit={(values) => {
-          const response = changePassword(values);
+          setIsLoading(true);
+          const response = changePassword(values, setIsLoading);
           if(response) {
             router.push('/home');
           }
