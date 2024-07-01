@@ -122,11 +122,11 @@ const Dashboard = () => {
                   <DatePickerYear setTransactions={setTransactions}  />
                 </div>
               </div>
-              <div className="mx-auto w-max">
-                <div className="rounded-lg overflow-hidden shadow-xl bg-white flex">
-                  <ButtonsMenu setFunction={setAnnualOption} state={annualOption} listNames={['Resumen', 'Beneficios', 'Gastos', 'Innecesarios', 'Necesarios', 'Inversion', 'Dividendos']} />
-                </div>
-              </div>
+              <div className="mx-auto w-full sm:w-max pl-2 pr-2">
+            <div className="rounded-lg overflow-hidden shadow-xl bg-white flex flex-wrap">
+              <ButtonsMenu setFunction={setAnnualOption} state={annualOption} listNames={['Resumen', 'Beneficios', 'Gastos', 'Innecesarios', 'Necesarios', 'Inversion', 'Dividendos']} />
+            </div>
+          </div>
               {annualOption === 0 &&
                 <AnualReview transactions={transactions} />
               }
@@ -151,11 +151,11 @@ const Dashboard = () => {
             </>
             :
             <>
-              <div className="mx-auto w-max">
-                <div className="rounded-lg overflow-hidden shadow-xl bg-white flex">
-                  <ButtonsMenu setFunction={setHistoricalOption} state={historicalOption} listNames={['Resumen', 'Beneficios', 'Gastos', 'Innecesarios', 'Necesarios', 'Inversion', 'Dividendos', 'Fondos']} />
-                </div>
-              </div>
+              <div className="mx-auto w-full sm:w-max pl-2 pr-2">
+            <div className="rounded-lg overflow-hidden shadow-xl bg-white flex flex-wrap">
+              <ButtonsMenu setFunction={setAnnualOption} state={annualOption} listNames={['Resumen', 'Beneficios', 'Gastos', 'Innecesarios', 'Necesarios', 'Inversion', 'Dividendos']} />
+            </div>
+          </div>
               {historicalOption === 0 &&
                 <HistorialReview transactions={allTransactions} />
               }
