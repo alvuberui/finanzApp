@@ -2,7 +2,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 export function useTransaction() {
-  const createBenefitTransaction = async (values) => {
+  const createBenefitTransaction = async (values, setIsLoading) => {
     try {
       const response = await axios.post("/api/transaction/benefit", values);
       setIsLoading(false);
@@ -14,7 +14,7 @@ export function useTransaction() {
     }
   };
 
-  const createExpenseTransaction = async (values) => {
+  const createExpenseTransaction = async (values, setIsLoading) => {
     try {
       const response = await axios.post("/api/transaction/expense", values);
       setIsLoading(false);
@@ -26,7 +26,7 @@ export function useTransaction() {
     }
   };
 
-  const createInvestmentTransaction = async (values) => {
+  const createInvestmentTransaction = async (values, setIsLoading) => {
     try {
       const response = await axios.post("/api/transaction/investment", values);
       setIsLoading(false);
@@ -60,7 +60,7 @@ export function useTransaction() {
     }
   };
 
-  const updateTransaction = async (type, id, values) => {
+  const updateTransaction = async (type, id, values, setIsLoading) => {
     try {
       const response = await axios.put(
         `/api/transaction/${type}/${id}`,
@@ -75,7 +75,7 @@ export function useTransaction() {
     }
   };
 
-  const deleteTransaction = async (type, id) => {
+  const deleteTransaction = async (type, id, setIsLoading) => {
     try {
       const response = await axios.delete(`/api/transaction/${type}/${id}`);
       setIsLoading(false);
