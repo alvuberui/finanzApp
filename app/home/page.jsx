@@ -28,7 +28,7 @@ const Dashboard = () => {
   
     // Si el usuario confirma la eliminación, proceder
     if (confirmDelete) {
-      const res = await deleteTransaction(type, id);
+      const res = await deleteTransaction(type, id, setIsLoading);
       if(res) {
         const newTransactions = transactions.filter(transaction => transaction._id !== id);
         setTransactions(newTransactions);
@@ -153,7 +153,7 @@ const Dashboard = () => {
             <>
               <div className="mx-auto w-full sm:w-max pl-2 pr-2">
             <div className="rounded-lg overflow-hidden shadow-xl bg-white flex flex-wrap">
-              <ButtonsMenu setFunction={setAnnualOption} state={annualOption} listNames={['Resumen', 'Beneficios', 'Gastos', 'Innecesarios', 'Necesarios', 'Inversion', 'Dividendos']} />
+              <ButtonsMenu setFunction={setHistoricalOption} state={historicalOption} listNames={['Resumen', 'Beneficios', 'Gastos', 'Innecesarios', 'Necesarios', 'Inversion', 'Dividendos']} />
             </div>
           </div>
               {historicalOption === 0 &&
