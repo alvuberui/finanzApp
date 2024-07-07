@@ -68,7 +68,7 @@ const AnualNecessary = ({transactions, benefitTransactions, investmentBenefitTra
         data_bar.datasets[0].data = idealData55;
 
 
-      }, [transactions]);
+      }, [transactions, benefitTransactions, investmentBenefitTransactions]);
     
     return (
         <div className="flex my-6 justify-center items-center text-center ">

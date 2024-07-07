@@ -18,7 +18,7 @@ const AnualBenefit = ({transactions}) => {
         datasets: [
             {
                 label: 'Valores reales',
-                data: [0, 0, 0, 0, 0, 0, 0],
+                data: [],
                 backgroundColor: 'rgba(53, 162, 235, 0.5)',
             },
         ],

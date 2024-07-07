@@ -23,10 +23,8 @@ const Dashboard = () => {
   const { getTransactionsByMonth, deleteTransaction, getAllTransactions } = useTransaction();
 
   const handleDeleteTransaction = async (type, id) => {
-    // Mostrar el cuadro de confirmación
     const confirmDelete = window.confirm("¿Estás seguro de que quieres eliminar esta transacción?");
   
-    // Si el usuario confirma la eliminación, proceder
     if (confirmDelete) {
       const res = await deleteTransaction(type, id, setIsLoading);
       if(res) {
