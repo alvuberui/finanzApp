@@ -21,6 +21,7 @@ const Dashboard = () => {
   const [ isLoading, setIsLoading ] = useState(false);
   const [ allTransactions, setAllTransactions ] = useState([]);
   const [ anualTransactions, setAnualTransactions ] = useState([]);
+  const [ yearSelected, setYearSelected ] = useState('');
   const { getTransactionsByMonth, deleteTransaction, getAllTransactions, getTransactionsByYear } = useTransaction();
 
   const handleDeleteTransaction = async (type, id) => {
@@ -75,6 +76,18 @@ const Dashboard = () => {
     setMonthSelected(`${year}-${month}`);
   }, []);
 
+  useEffect(() => {
+    const fetchTransactions = async () => {
+        setIsLoading(true);
+            if (yearSelected !== '') {
+                const data = await getTransactionsByYear(yearSelected, setIsLoading);
+                setAnualTransactions(data);
+            }
+    };
+
+    fetchTransactions();
+}, [yearSelected]);
+
   return (
     <main className="flex min-h-screen w-full flex-col items-center justify-between pt-5 bg-white">
       { isLoading && <LoadingSpinner />}
@@ -118,7 +131,7 @@ const Dashboard = () => {
             <>
               <div className="mx-auto w-max mb-5">
                 <div className="rounded-lg overflow-hidden bg-white flex items-center border border-gray-300 shadow-lg">
-                  <DatePickerYear setTransactions={setAnualTransactions}  />
+                  <DatePickerYear setYearSelected={setYearSelected} yearSelected={yearSelected}   />
                 </div>
               </div>
               <div className="mx-auto w-full sm:w-max pl-2 pr-2">
