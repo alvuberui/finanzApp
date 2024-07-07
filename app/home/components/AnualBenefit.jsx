@@ -26,7 +26,7 @@ ChartJS.register(ArcElement, Legend, CategoryScale,
 const AnualBenefit = ({transactions}) => {
   const labels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
-  const data_bar = {
+  const staticData = {
         labels,
         datasets: [
             {
