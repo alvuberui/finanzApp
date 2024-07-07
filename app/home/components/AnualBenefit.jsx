@@ -45,8 +45,8 @@ const AnualBenefit = ({transactions}) => {
             acc[month] += transaction.quantity;
             return acc;
         }, new Array(12).fill(0));
-        data_bar.datasets[0].data = months;
-        setData(data_bar);
+        staticData.datasets[0].data = months;
+        setData(staticData);
       }, [transactions]);
     
     return (
