@@ -107,14 +107,14 @@ const MonthDonut = ({ transactions }) => {
     };
 
     setElementList([
-      benefitAmount,
-      totalBenefit,
-      totalExpense,
-      innecesaryAmount,
-      necessaryAmount,
-      benefitInvestment,
-      investmentAmount,
-      savingAmount,
+      benefitAmount.toFixed(2),
+      totalBenefit.toFixed(2),
+      totalExpense.toFixed(2),
+      innecesaryAmount.toFixed(2),
+      necessaryAmount.toFixed(2),
+      benefitInvestment.toFixed(2),
+      investmentAmount.toFixed(2),
+      savingAmount.toFixed(2),
     ]);
     setRealData(updatedData);
 
