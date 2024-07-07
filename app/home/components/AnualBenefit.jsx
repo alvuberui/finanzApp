@@ -45,7 +45,8 @@ const AnualBenefit = ({transactions}) => {
         }, new Array(12).fill(0));
         data_bar.datasets[0].data = months;
       }, [transactions]);
-
+      console.log(data_bar);
+      console.log(transactions)
     
     return (
         <div className="flex my-6 justify-center items-center text-center ">

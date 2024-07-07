@@ -84,7 +84,6 @@ const Dashboard = () => {
                 setAnualTransactions(data);
             }
     };
-
     fetchTransactions();
 }, [yearSelected]);
 
