@@ -10,10 +10,23 @@ ChartJS.register(ArcElement, Legend, CategoryScale,
     Title,
     Tooltip,);
 
+    const options = {
+      responsive: true,
+      plugins: {
+        legend: {
+          position: 'top',
+        },
+        title: {
+          display: true,
+          text: 'Beneficios anuales',
+        },
+      },
+    };
+
 const AnualBenefit = ({transactions}) => {
   const labels = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
-    let data_bar = {
+  const data_bar = {
         labels,
         datasets: [
             {
@@ -24,18 +37,7 @@ const AnualBenefit = ({transactions}) => {
         ],
     };
 
-    const options = {
-        responsive: true,
-        plugins: {
-          legend: {
-            position: 'top',
-          },
-          title: {
-            display: true,
-            text: 'Beneficios anuales',
-          },
-        },
-      };
+    const [data, setData] = useState(staticData);
 
       useEffect(() => {
         const months = transactions.reduce((acc, transaction) => {
@@ -44,15 +46,14 @@ const AnualBenefit = ({transactions}) => {
             return acc;
         }, new Array(12).fill(0));
         data_bar.datasets[0].data = months;
+        setData(data_bar);
       }, [transactions]);
-      console.log(data_bar);
-      console.log(transactions)
     
     return (
         <div className="flex my-6 justify-center items-center text-center ">
             <div className="rounded-lg overflow-hidden border border-gray-300 my-2 lg:w-1/2 w-full shadow-lg chart-container">
                 <h2 className="text-center mt-2 mb-2 text-2xl font-bold text-gray-900">Comparación de datos</h2>
-                <Bar options={options} data={data_bar} />
+                <Bar options={options} data={data} />
             </div>
         </div>
     )
