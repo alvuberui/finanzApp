@@ -4,9 +4,7 @@ import { useEffect, useState } from "react";
 import useTransaction from "../handlers/useTransaction";
 import LoadingSpinner from "./LoadingSpinner";
 
-const DatePickerYear = ({ setTransactions }) => {
-
-    const [yearSelected, setYearSelected] = useState('');
+const DatePickerYear = ({ yearSelected, setYearSelected }) => {
     const [isLoading, setIsLoading] = useState(false);
     const { getTransactionsByYear } = useTransaction();
 
@@ -28,19 +26,6 @@ const DatePickerYear = ({ setTransactions }) => {
         const year = currentDate.getFullYear();
         setYearSelected(year);
     }, []);
-
-    useEffect(() => {
-        const fetchTransactions = async () => {
-            setIsLoading(true);
-                if (yearSelected !== '') {
-                    const data = await getTransactionsByYear(yearSelected, setIsLoading);
-                    setTransactions(data);
-                }
-           
-        };
-
-        fetchTransactions();
-    }, [yearSelected]);
 
     return (
         <>  
