@@ -20,7 +20,8 @@ const Dashboard = () => {
   const [transactions, setTransactions] = useState([]);
   const [ isLoading, setIsLoading ] = useState(false);
   const [ allTransactions, setAllTransactions ] = useState([]);
-  const { getTransactionsByMonth, deleteTransaction, getAllTransactions } = useTransaction();
+  const [ anualTransactions, setAnualTransactions ] = useState([]);
+  const { getTransactionsByMonth, deleteTransaction, getAllTransactions, getTransactionsByYear } = useTransaction();
 
   const handleDeleteTransaction = async (type, id) => {
     const confirmDelete = window.confirm("¿Estás seguro de que quieres eliminar esta transacción?");
@@ -117,7 +118,7 @@ const Dashboard = () => {
             <>
               <div className="mx-auto w-max mb-5">
                 <div className="rounded-lg overflow-hidden bg-white flex items-center border border-gray-300 shadow-lg">
-                  <DatePickerYear setTransactions={setTransactions}  />
+                  <DatePickerYear setTransactions={setAnualTransactions}  />
                 </div>
               </div>
               <div className="mx-auto w-full sm:w-max pl-2 pr-2">
@@ -126,25 +127,25 @@ const Dashboard = () => {
             </div>
           </div>
               {annualOption === 0 &&
-                <AnualReview transactions={transactions} />
+                <AnualReview transactions={anualTransactions} />
               }
               {annualOption === 1 &&
-                <AnualBenefit transactions={ transactions.filter((transaction) => transaction.type === 'benefit') } />
+                <AnualBenefit transactions={ anualTransactions.filter((transaction) => transaction.type === 'benefit') } />
               }
               {annualOption === 2 &&
-                <AnualBills transactions={ transactions.filter((transaction) => transaction.type === 'expense')  } benefitTransactions={transactions.filter((transaction) => transaction.type === 'benefit')} investmentBenefitTransactions={transactions.filter((transaction) => transaction.type === 'investment' && transaction.investmentType === 'BENEFIT')}/>
+                <AnualBills transactions={ anualTransactions.filter((transaction) => transaction.type === 'expense')  } benefitTransactions={anualTransactions.filter((transaction) => transaction.type === 'benefit')} investmentBenefitTransactions={anualTransactions.filter((transaction) => transaction.type === 'investment' && transaction.investmentType === 'BENEFIT')}/>
               }
               {annualOption === 3 &&
-                <AnualInnecesary transactions={ transactions.filter((transaction) => transaction.type === 'expense' && transaction.expenseType === 'UNNECESSARY') } benefitTransactions={transactions.filter((transaction) => transaction.type === 'benefit')} investmentBenefitTransactions={transactions.filter((transaction) => transaction.type === 'investment' && transaction.investmentType === 'BENEFIT')} />
+                <AnualInnecesary transactions={ anualTransactions.filter((transaction) => transaction.type === 'expense' && transaction.expenseType === 'UNNECESSARY') } benefitTransactions={anualTransactions.filter((transaction) => transaction.type === 'benefit')} investmentBenefitTransactions={anualTransactions.filter((transaction) => transaction.type === 'investment' && transaction.investmentType === 'BENEFIT')} />
               }
               {annualOption === 4 &&
-                <AnualNecessary transactions={ transactions.filter((transaction) => transaction.type === 'expense' && transaction.expenseType === 'MANDATORY') } benefitTransactions={transactions.filter((transaction) => transaction.type === 'benefit')} investmentBenefitTransactions={transactions.filter((transaction) => transaction.type === 'investment' && transaction.investmentType === 'BENEFIT')} />
+                <AnualNecessary transactions={ anualTransactions.filter((transaction) => transaction.type === 'expense' && transaction.expenseType === 'MANDATORY') } benefitTransactions={anualTransactions.filter((transaction) => transaction.type === 'benefit')} investmentBenefitTransactions={anualTransactions.filter((transaction) => transaction.type === 'investment' && transaction.investmentType === 'BENEFIT')} />
               }
               {annualOption === 5 &&
-                <AnualInvestment  transactions={ transactions.filter((transaction) => transaction.type === 'investment' && transaction.investmentType === 'INVESTMENT') } benefitTransactions={transactions.filter((transaction) => transaction.type === 'benefit')} investmentBenefitTransactions={transactions.filter((transaction) => transaction.type === 'investment' && transaction.investmentType === 'BENEFIT')} />
+                <AnualInvestment  transactions={ anualTransactions.filter((transaction) => transaction.type === 'investment' && transaction.investmentType === 'INVESTMENT') } benefitTransactions={anualTransactions.filter((transaction) => transaction.type === 'benefit')} investmentBenefitTransactions={anualTransactions.filter((transaction) => transaction.type === 'investment' && transaction.investmentType === 'BENEFIT')} />
               }
               {annualOption === 6 &&
-                <AnualDividend transactions={ transactions.filter((transaction) => transaction.type === 'investment' && transaction.investmentType === 'BENEFIT') } benefitTransactions={transactions.filter((transaction) => transaction.type === 'benefit')} investmentBenefitTransactions={transactions.filter((transaction) => transaction.type === 'investment' && transaction.investmentType === 'BENEFIT')} />
+                <AnualDividend transactions={ anualTransactions.filter((transaction) => transaction.type === 'investment' && transaction.investmentType === 'BENEFIT') } benefitTransactions={anualTransactions.filter((transaction) => transaction.type === 'benefit')} investmentBenefitTransactions={anualTransactions.filter((transaction) => transaction.type === 'investment' && transaction.investmentType === 'BENEFIT')} />
               }
             </>
             :
