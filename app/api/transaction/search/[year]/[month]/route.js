@@ -40,7 +40,7 @@ async function GET(request, { params }) {
     
     // Unimos los resultados en una sola lista y lo ordenamos por fecha
     benefits.push(...expenses, ...investments);
-    benefits.sort((a, b) => a.date - b.date);
+    benefits.sort((a, b) => b.date - a.date);
 
     return NextResponse.json({
       data: benefits,
