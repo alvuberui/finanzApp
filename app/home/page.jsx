@@ -18,7 +18,7 @@ const Dashboard = () => {
   const [historicalOption, setHistoricalOption] = useState(0);
   const [monthSelected, setMonthSelected] = useState('');
   const [transactions, setTransactions] = useState([]);
-  const [ isLoading, setIsLoading ] = useState(false);
+  const [ isLoading, setIsLoading ] = useState(true);
   const [ allTransactions, setAllTransactions ] = useState([]);
   const [ anualTransactions, setAnualTransactions ] = useState([]);
   const [ yearSelected, setYearSelected ] = useState('');
