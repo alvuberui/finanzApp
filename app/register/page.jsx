@@ -1,14 +1,13 @@
 'use client';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { useRouter } from "next/navigation";
+
 import useAuth from '../handlers/useAuth';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { useState } from 'react';
 
 export default function Home() {
 
-  const router = useRouter();
   const { signup } = useAuth();
   const [ isLoading, setIsLoading ] = useState(false);
 
@@ -29,10 +28,8 @@ export default function Home() {
           acceptedTerms: Yup.boolean().oneOf([true], 'Debes de aceptar términos y condiciones').required('Campo obligatorio')
         })}
         onSubmit={async (values) => {
-            const response = await signup(values, setIsLoading)
-            if (response) {
-              router.push('/home')
-            }
+            await signup(values, setIsLoading)
+            
         }}
       >
         <Form className="my-auto mb-5 flex flex-col w-full max-w-md bg-white rounded-lg shadow-md p-8">

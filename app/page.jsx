@@ -5,15 +5,11 @@ import React, { useState } from 'react';
 import InfoHome from './components/InfoHome';
 import Link from 'next/link';
 
-import { useRouter } from "next/navigation";
-
 import { useAuth } from "./handlers/useAuth";
-import { ToastContainer } from 'react-toastify';
 import LoadingSpinner from './components/LoadingSpinner';
 
 
 export default function Home() {
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
 
@@ -46,10 +42,8 @@ export default function Home() {
                 })}
                 onSubmit={async (values) => {
                     setLoading(true);
-                    const response = await login(values, setLoading);
-                    if(response) {
-                      router.push('/home');
-                    }
+                    await login(values, setLoading);
+                    
                 }}
               >
                 <Form className="flex flex-col items-center">
