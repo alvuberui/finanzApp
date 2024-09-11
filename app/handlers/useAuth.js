@@ -1,11 +1,13 @@
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
-
+import { useRouter } from "next/navigation";
 import { login, logout } from "../slices/authSlice";
 
 export function useAuth() {
   const dispatch = useDispatch();
+
+  const router = useRouter();
 
   const loginHandler = async (values, setIsLoading) => {
     try {
@@ -14,6 +16,7 @@ export function useAuth() {
       localStorage.setItem("user", response.data.user);
       dispatch(login(response.data.user));
       setIsLoading(false);
+      router.push('/home');
       toast.success(response.data.message);
       return response.data.user;
     } catch (error) {
@@ -43,6 +46,7 @@ export function useAuth() {
       dispatch(login(response.data.user));
       setIsLoading(false);
       toast.success(response.data.message);
+      router.push('/home');
       return true;
     } catch (error) {
       setIsLoading(false);
