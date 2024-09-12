@@ -107,6 +107,15 @@ export function useTransaction() {
     }
   };
 
+  const getAllHeritage = async (setIsLoading) => {
+    try {
+      const response = await axios.get("/api/heritage");
+      return response.data.data;
+    } catch (error) {
+      toast.error(error.response.data.error);
+    }
+  };
+
   return {
     createBenefitTransaction,
     createExpenseTransaction,
@@ -117,6 +126,7 @@ export function useTransaction() {
     deleteTransaction,
     getTransactionsByYear,
     getAllTransactions,
+    getAllHeritage
   };
 }
 export default useTransaction;
