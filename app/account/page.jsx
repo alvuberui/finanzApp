@@ -8,17 +8,22 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from 'react';
 import LoadingSpinner from '../components/LoadingSpinner';
+import useTransaction from '../handlers/useTransaction';
 
 export default function AccountData() {
   const router = useRouter();
   const { deleteAccount, updateAccount, getDataFromToken } = useAuth();
   const [ userData , setUserData ] = useState({ name: '', firstName: '', lastName: '', birthDate: '', currentMoney: '', email: ''});
   const [ isLoaded, setIsLoaded ] = useState(false);
+  const { getAllHeritage } = useTransaction();
+  const [ heritage, setHeritage ] = useState(0);
 
   useEffect(() => {
     const fetchData = async () => {
       setIsLoaded(true);
       const user = await getDataFromToken(setIsLoaded);
+      const heritage = await getAllHeritage(setIsLoaded);
+      setHeritage(heritage);
       user.birthDate = new Date(user.birthDate).toISOString().split('T')[0];
       setUserData(user);
       setIsLoaded(false);
@@ -116,6 +121,10 @@ export default function AccountData() {
           </Form>
         )}
       </Formik>
+      <div className="mx-auto my-auto flex flex-col w-full max-w-md bg-white rounded-lg shadow-md p-8 mt-4 mb-4">
+        <h1 className="text-3xl font-bold text-center mb-5">Patrimonio actual</h1>
+        <p className="text-gray-600 text-m text-center mb-5">Tu patrimonio actual es de: {heritage}€</p>
+      </div>
       <div className="mx-auto my-auto flex flex-col w-full max-w-md bg-white rounded-lg shadow-md p-8 mt-4 mb-4">
         <h1 className="text-3xl font-bold text-center mb-5">Eliminar cuenta</h1>
         <p className="text-gray-600 text-sm text-center mb-5">¡Esta acción es irreversible!</p>
