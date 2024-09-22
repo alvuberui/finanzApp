@@ -135,6 +135,7 @@ const MonthDonut = ({ transactions }) => {
     ]);
   }, [transactions]);
 
+  console.log('elementList', elementList);
   return (
     <div className="flex my-6 justify-center items-center text-center">
       <div className="flex w-4/5 flex-col mb-4 lg:flex-row items-center text-center justify-center">
@@ -146,7 +147,7 @@ const MonthDonut = ({ transactions }) => {
             </div>
             <div className="flex justify-center items-center">
               <ListElements
-                colors={['bg-black', 'bg-red-900', 'bg-red-400', 'bg-lime-400', 'bg-pink-500', 'bg-yellow-500', 'bg-blue-400']}
+                colors={['bg-black', 'bg-red-900',  'bg-red-400', 'bg-lime-400', 'bg-pink-500', 'bg-purple-400', 'bg-yellow-400', 'bg-blue-400']}
                 titles={[
                   'Beneficio',
                   'Beneficio total:',
@@ -170,7 +171,7 @@ const MonthDonut = ({ transactions }) => {
             </div>
             <div className="flex justify-center items-center mb-8">
               <ListElements
-                colors={['bg-black', 'bg-red-900', 'bg-red-400', 'bg-lime-400', 'bg-pink-500', 'bg-blue-400']}
+                colors={['bg-black', 'bg-red-900', 'bg-red-400', 'bg-lime-400', 'bg-pink-500', 'bg-yellow-400', 'bg-blue-400']}
                 titles={[
                   'Beneficio',
                   'Beneficio total:',

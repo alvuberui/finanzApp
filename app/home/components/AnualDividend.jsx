@@ -44,11 +44,12 @@ const AnualDividend = ({ transactions, benefitTransactions, investmentBenefitTra
   const [data, setData] = useState(staticData);
 
   useEffect(() => {
-    const months = transactions.reduce((acc, transaction) => {
+    let months = transactions.reduce((acc, transaction) => {
       const month = new Date(transaction.date).getMonth();
       acc[month] += transaction.quantity;
       return acc;
     }, new Array(12).fill(0));
+
 
     const updatedData = {
       ...staticData,

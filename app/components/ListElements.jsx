@@ -1,6 +1,7 @@
 import React from 'react'
 
 const ListElements = ({ colors, titles, values }) => {
+ 
     return (
         <ul className="mt-4">
             {

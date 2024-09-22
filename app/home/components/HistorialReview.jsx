@@ -72,27 +72,32 @@ useEffect(() => {
   keys.forEach((key) => {
     // Recorremos cada key obteniendo el valor de cada una
     transactions[key].forEach((transaction) => {
-      if(transaction.type === 'expense' && transaction.expenseType === 'UNNECESSARY') {
-        innecesaryAmount += transaction.quantity;
-      } else if(transaction.type === 'expense' && transaction.expenseType === 'MANDATORY') {
-        necessaryAmount += transaction.quantity;
-      } else if(transaction.type === 'investment' && transaction.investmentType === 'INVESTMENT') {
-        investmentAmount += transaction.quantity;
-      } else if(transaction.type === 'investment' && transaction.investmentType === 'BENEFIT') {
-        benefitInvestment += transaction.quantity;
-      } else if(transaction.type === 'benefit') {
-        benefitAmount += transaction.quantity;
-      }
+        if(transaction.type === 'expense' && transaction.expenseType === 'UNNECESSARY') {
+            innecesaryAmount += parseFloat(transaction.quantity.toFixed(2));
+            innecesaryAmount = parseFloat(innecesaryAmount.toFixed(2));
+        } else if(transaction.type === 'expense' && transaction.expenseType === 'MANDATORY') {
+            necessaryAmount += parseFloat(transaction.quantity.toFixed(2));
+            necessaryAmount = parseFloat(necessaryAmount.toFixed(2));
+        } else if(transaction.type === 'investment' && transaction.investmentType === 'INVESTMENT') {
+            investmentAmount += parseFloat(transaction.quantity.toFixed(2));
+            investmentAmount = parseFloat(investmentAmount.toFixed(2));
+        } else if(transaction.type === 'investment' && transaction.investmentType === 'BENEFIT') {
+            benefitInvestment += parseFloat(transaction.quantity.toFixed(2));
+            benefitInvestment = parseFloat(benefitInvestment.toFixed(2));
+        } else if(transaction.type === 'benefit') {
+            benefitAmount += parseFloat(transaction.quantity.toFixed(2));
+            benefitAmount = parseFloat(benefitAmount.toFixed(2));
+        }
     });
   });
-    const totalExpense =  innecesaryAmount + necessaryAmount;
-    const totalBenefit = benefitAmount + benefitInvestment;
-    const savingAmount = totalBenefit - totalExpense - investmentAmount;
+    const totalExpense =  (innecesaryAmount + necessaryAmount).toFixed(2);
+    const totalBenefit = (benefitAmount + benefitInvestment).toFixed(2);
+    const savingAmount = (totalBenefit - totalExpense - investmentAmount).toFixed(2);
 
-    const innecesaryPercentage = (innecesaryAmount * 100) / totalBenefit;
-        const necessaryPercentage = (necessaryAmount * 100) / totalBenefit;
-        const investmentPercentage = (investmentAmount * 100) / totalBenefit;
-        const savingPercentage = (savingAmount * 100) / totalBenefit;
+    const innecesaryPercentage = ((innecesaryAmount * 100) / totalBenefit).toFixed(2);
+        const necessaryPercentage = ((necessaryAmount * 100) / totalBenefit).toFixed(2);
+        const investmentPercentage = ((investmentAmount * 100) / totalBenefit).toFixed(2);
+        const savingPercentage = ((savingAmount * 100) / totalBenefit).toFixed(2);
 
     data.datasets[0].data = [innecesaryPercentage, savingPercentage, investmentPercentage, necessaryPercentage];
         setElementList([totalBenefit, totalExpense, innecesaryAmount, necessaryAmount, benefitInvestment, investmentAmount, savingAmount]);
@@ -110,6 +115,7 @@ useEffect(() => {
 const [ realData, setRealData ] = useState(data);
 const [ elementList, setElementList ] = useState([]);
 const [ idealList, setIdealList ] = useState([]);
+
   return (
     <div className="flex my-6 justify-center items-center text-center">
         <div className="flex w-4/5 flex-col mb-4 lg:flex-row items-center text-center justify-center">
