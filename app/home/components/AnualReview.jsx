@@ -74,19 +74,19 @@ const AnualReview = ({ transactions }) => {
     const investment = transactions.filter((transaction) => transaction.type === 'investment' && transaction.investmentType === 'INVESTMENT');
     const benefit = transactions.filter((transaction) => transaction.type === 'benefit');
 
-    const benefitInvestment = investmentBenefit.reduce((acc, curr) => acc + curr.quantity, 0);
-    const benefitAmount = benefit.reduce((acc, curr) => acc + curr.quantity, 0);
-    const totalBenefit = benefitAmount + benefitInvestment;
-    const innecesaryAmount = innecesary.reduce((acc, curr) => acc + curr.quantity, 0);
-    const necessaryAmount = necessary.reduce((acc, curr) => acc + curr.quantity, 0);
-    const totalExpense = innecesaryAmount + necessaryAmount;
-    const investmentAmount = investment.reduce((acc, curr) => acc + curr.quantity, 0);
-    const savingAmount = totalBenefit - totalExpense - investmentAmount;
+    const benefitInvestment = investmentBenefit.reduce((acc, curr) => acc + curr.quantity, 0)
+    const benefitAmount = benefit.reduce((acc, curr) => acc + curr.quantity, 0)
+    const totalBenefit = (benefitAmount + benefitInvestment);
+    const innecesaryAmount = innecesary.reduce((acc, curr) => acc + curr.quantity, 0)
+    const necessaryAmount = necessary.reduce((acc, curr) => acc + curr.quantity, 0)
+    const totalExpense = (innecesaryAmount + necessaryAmount);
+    const investmentAmount = investment.reduce((acc, curr) => acc + curr.quantity, 0)
+    const savingAmount = (totalBenefit - totalExpense - investmentAmount);
 
-    const innecesaryPercentage = (innecesaryAmount * 100) / totalBenefit;
-    const necessaryPercentage = (necessaryAmount * 100) / totalBenefit;
-    const investmentPercentage = (investmentAmount * 100) / totalBenefit;
-    const savingPercentage = (savingAmount * 100) / totalBenefit;
+    const innecesaryPercentage = ((innecesaryAmount * 100) / totalBenefit)
+    const necessaryPercentage = ((necessaryAmount * 100) / totalBenefit)
+    const investmentPercentage = ((investmentAmount * 100) / totalBenefit)
+    const savingPercentage = ((savingAmount * 100) / totalBenefit)
 
     const updatedData = {
       ...initialData,
@@ -99,29 +99,29 @@ const AnualReview = ({ transactions }) => {
     };
 
     setElementList([
-      totalBenefit,
-      totalExpense,
-      innecesaryAmount,
-      necessaryAmount,
-      benefitInvestment,
-      investmentAmount,
-      savingAmount,
+      totalBenefit.toFixed(2),
+      totalExpense.toFixed(2),
+      innecesaryAmount.toFixed(2),
+      necessaryAmount.toFixed(2),
+      benefitInvestment.toFixed(2),
+      investmentAmount.toFixed(2),
+      savingAmount.toFixed(2),
     ]);
     setRealData(updatedData);
 
     // IDEAL LIST ELEMENTS
-    const idealTotalExpense = (totalBenefit * 0.55).toFixed(2);
-    const idealNecessaryAmount = (totalBenefit * 0.4).toFixed(2);
-    const idealInnecesaryAmount = (totalBenefit * 0.15).toFixed(2);
-    const idealInvestmentAmount = (totalBenefit * 0.1).toFixed(2);
-    const idealSavingAmount = (totalBenefit * 0.35).toFixed(2);
+    const idealTotalExpense = (totalBenefit * 0.55);
+    const idealNecessaryAmount = (totalBenefit * 0.4)
+    const idealInnecesaryAmount = (totalBenefit * 0.15)
+    const idealInvestmentAmount = (totalBenefit * 0.1)
+    const idealSavingAmount = (totalBenefit * 0.35)
     setIdealList([
-      totalBenefit,
-      idealTotalExpense,
-      idealInnecesaryAmount,
-      idealNecessaryAmount,
-      idealInvestmentAmount,
-      idealSavingAmount,
+      totalBenefit.toFixed(2),
+      idealTotalExpense.toFixed(2),
+      idealInnecesaryAmount.toFixed(2),
+      idealNecessaryAmount.toFixed(2),
+      idealInvestmentAmount.toFixed(2),
+      idealSavingAmount.toFixed(2),
     ]);
   }, [transactions]);
 

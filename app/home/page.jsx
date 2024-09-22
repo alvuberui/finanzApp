@@ -9,6 +9,8 @@ import HistoricalInvestment from "./components/HistoricalInvestment";
 import HistoricalMoney from "./components/HistoricalMoney";
 import useTransaction from "../handlers/useTransaction";
 import LoadingSpinner from "../components/LoadingSpinner";
+import AnualSaves from "./components/AnualSaves";
+import HistoricalSaves from "./components/HistoricalSaves";
 
 const Dashboard = () => {
 
@@ -135,7 +137,7 @@ const Dashboard = () => {
               </div>
               <div className="mx-auto w-full sm:w-max pl-2 pr-2">
             <div className="rounded-lg overflow-hidden shadow-xl bg-white flex flex-wrap">
-              <ButtonsMenu setFunction={setAnnualOption} state={annualOption} listNames={['Resumen', 'Beneficios', 'Gastos', 'Innecesarios', 'Necesarios', 'Inversion', 'Dividendos']} />
+              <ButtonsMenu setFunction={setAnnualOption} state={annualOption} listNames={['Resumen', 'Beneficios', 'Gastos', 'Innecesarios', 'Necesarios', 'Inversion', 'Dividendos', 'Ahorros']} />
             </div>
           </div>
               {annualOption === 0 &&
@@ -159,12 +161,15 @@ const Dashboard = () => {
               {annualOption === 6 &&
                 <AnualDividend transactions={ anualTransactions.filter((transaction) => transaction.type === 'investment' && transaction.investmentType === 'BENEFIT') } benefitTransactions={anualTransactions.filter((transaction) => transaction.type === 'benefit')} investmentBenefitTransactions={anualTransactions.filter((transaction) => transaction.type === 'investment' && transaction.investmentType === 'BENEFIT')} />
               }
+              {annualOption === 7 &&
+                <AnualSaves transactions={ anualTransactions.filter((transaction) => transaction.type === 'investment' && transaction.investmentType === 'BENEFIT') } transactionsInvest={ anualTransactions.filter((transaction) => transaction.type === 'investment' && transaction.investmentType === 'INVESTMENT') } benefitTransactions={anualTransactions.filter((transaction) => transaction.type === 'benefit')} expenseTransactions={ anualTransactions.filter((transaction) => transaction.type === 'expense')  } />
+              }
             </>
             :
             <>
               <div className="mx-auto w-full sm:w-max pl-2 pr-2">
             <div className="rounded-lg overflow-hidden shadow-xl bg-white flex flex-wrap">
-              <ButtonsMenu setFunction={setHistoricalOption} state={historicalOption} listNames={['Resumen', 'Beneficios', 'Gastos', 'Innecesarios', 'Necesarios', 'Inversion', 'Dividendos']} />
+              <ButtonsMenu setFunction={setHistoricalOption} state={historicalOption} listNames={['Resumen', 'Beneficios', 'Gastos', 'Innecesarios', 'Necesarios', 'Inversion', 'Dividendos', "Ahorros"]} />
             </div>
           </div>
               {historicalOption === 0 &&
@@ -190,6 +195,9 @@ const Dashboard = () => {
               }
               {historicalOption === 7 &&
                 <HistoricalMoney transactions={allTransactions}/>
+              }
+              {historicalOption === 8 &&
+                <HistoricalSaves transactions={allTransactions}/>
               }
             </>
         }
