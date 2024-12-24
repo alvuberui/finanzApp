@@ -1,27 +1,14 @@
 import mongoose from "mongoose";
 
 const benefitTransactionSchema = new mongoose.Schema({
-  amount: {
-    type: Number,
+  labelType: {
+    type: String,
+    enum: ["MANDATORY", "UNNECESSARY", "INVESTMENT", "BENEFIT"],
     required: true,
   },
-  description: {
+  title: {
     type: String,
     required: true,
-  },
-  date: {
-    type: Date,
-    required: true,
-  },
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-  labelId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Label",
-    required: false,
   }
 });
 

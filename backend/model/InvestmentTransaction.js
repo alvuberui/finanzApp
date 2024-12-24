@@ -1,12 +1,7 @@
 import mongoose from "mongoose";
 
 const investmentTransactionSchema = new mongoose.Schema({
-  investmentType: {
-    type: String,
-    enum: ["BENEFIT", "INVESTMENT"],
-    required: true,
-  },
-  quantity: {
+  amount: {
     type: Number,
     required: true,
   },
@@ -23,10 +18,11 @@ const investmentTransactionSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-  },
+  labelId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Label",
+    required: false,
+  }
 });
 
 const InvestmentTransaction =

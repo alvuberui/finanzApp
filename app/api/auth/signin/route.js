@@ -1,55 +1,62 @@
+import jwt from "jsonwebtoken";
 const { connect } = require("@/backend/config/dbConfig");
 const { User } = require("@/backend/model/UserModel");
 const { NextRequest, NextResponse } = require("next/server");
 const bcryptjs = require("bcryptjs");
-import jwt from "jsonwebtoken"
 
 connect();
+
+const SECRET_KEY = process.env.TOKEN_SECRET || "your_secret_key";
 
 /*
  *  Login route
  */
-export async function POST(request){
+export async function POST(request) {
     try {
-        const reqBody = await request.json()
-        const {email, password} = reqBody
+        const reqBody = await request.json();
+        const { email, password } = reqBody;
 
         /*
          * Check if the email exists. 
          */
-        const user = await User.findOne({email})
+        const user = await User.findOne({ email });
 
-        if(!user){
-            return NextResponse.json({error: "Este email no existe. Por favor, crea una cuenta."}, {status: 400})
+        if (!user) {
+            return NextResponse.json(
+                { error: "Este email no existe. Por favor, crea una cuenta." },
+                { status: 400 }
+            );
         }
-        
+
         /*
          * Check if the password is correct
          */
-        const validPassword = await bcryptjs.compare
-        (password, user.password)
-        if(!validPassword){
-            return NextResponse.json({error: "La contraseña es incorrecta"}, {status: 400})
+        const validPassword = await bcryptjs.compare(password, user.password);
+        if (!validPassword) {
+            return NextResponse.json(
+                { error: "La contraseña es incorrecta" },
+                { status: 400 }
+            );
         }
 
-        /* Create token data
-         * A JavaScript object (tokenData) is created to store essential user 
-         * information. In this case, it includes the user's unique identifier (id), and email
+        /* 
+         * Create token data
          */
         const tokenData = {
             id: user._id,
             email: user.email,
-            name: user.name
-        }
-        
+            name: user.name,
+        };
+
         /*
-         * Create a token with expiration 1 day
+         * Create a token and refreshToken
          */
-        const token = jwt.sign(tokenData, process.env.TOKEN_SECRET, {expiresIn: "1d"})
-        
+        const token = jwt.sign(tokenData, SECRET_KEY, { expiresIn: "15m" });
+        const refreshToken = jwt.sign({ id: user._id, email: user.email }, SECRET_KEY, { expiresIn: "7d" });
+
+        // Sanitize user object
         user.password = undefined;
         user.currentMoney = undefined;
-
 
         /*
          * Send a successful response
@@ -58,20 +65,29 @@ export async function POST(request){
             message: "Sesión iniciada correctamente",
             user: user,
             success: true,
-        })
+            token,
+        });
 
         /*
-         * Set the token in a cookie
+         * Set the tokens in cookies
          */
+        response.cookies.set("refreshToken", refreshToken, {
+            httpOnly: true,
+            secure: true,
+            path: "/api",
+            sameSite: "strict",
+        });
+
         response.cookies.set("token", token, {
             httpOnly: true,
-        })
+            secure: true,
+            path: "/api",
+            sameSite: "strict",
+        });
 
         return response;
 
     } catch (error) {
-        return NextResponse.json({error: error.message}, {status: 500})
-
+        return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
-

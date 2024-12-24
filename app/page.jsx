@@ -10,6 +10,7 @@ import LoadingSpinner from './components/LoadingSpinner';
 
 
 export default function Home() {
+  
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
 

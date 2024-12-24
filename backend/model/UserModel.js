@@ -6,12 +6,12 @@ const userSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  firstName: {
+  firsSurname: {
     type: String,
     required: true,
     trim: true,
   },
-  lastName: {
+  secondSurname: {
     type: String,
     required: true,
     trim: true,
@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  currentMoney: {
+  startupMoneyAmount: {
     type: Number,
     required: true,
   },
@@ -32,11 +32,7 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-  },
-  forgotPasswordToken: String,
-  forgotPasswordTokenExpiry: Date,
-  verifyToken: String,
-  verifyTokenExpiry: Date,
+  }
 });
 
 const User = mongoose.models.users || mongoose.model("users", userSchema);

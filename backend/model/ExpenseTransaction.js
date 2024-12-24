@@ -6,7 +6,7 @@ const expenseTransactionSchema = new mongoose.Schema({
     enum: ["MANDATORY", "UNNECESSARY"],
     required: true,
   },
-  quantity: {
+  amount: {
     type: Number,
     required: true,
   },
@@ -23,10 +23,11 @@ const expenseTransactionSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  type: {
-    type: String,
-    required: true,
-  },
+  labelId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Label",
+    required: false,
+  }
 });
 
 const ExpenseTransaction =
