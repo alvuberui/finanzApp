@@ -10,13 +10,13 @@ const withGuest = (WrappedComponent) => {
         const [loading, setLoading] = useState(true); 
 
         useEffect(() => {
-    
             const checkAuth = async () => {
                 setLoading(true);
-        
+
                 if (isLogged) {
                     router.push("/home"); 
                 }
+
                 setLoading(false);
             };
 
@@ -29,6 +29,10 @@ const withGuest = (WrappedComponent) => {
                     <LoadingSpinner />
                 </div>
             );
+        }
+
+        if (isLogged) {
+            return null;
         }
 
         return <WrappedComponent {...props} />;

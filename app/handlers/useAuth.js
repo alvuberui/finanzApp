@@ -12,7 +12,6 @@ export function useAuth() {
   const loginHandler = async (values, setIsLoading) => {
     try {
       const response = await axios.post("/api/auth/signin", values);
-      console.log(response.data);
       dispatch(login({ token: response.data.token, user: response.data.user }));
       setIsLoading(false);
       router.push('/home');
@@ -40,9 +39,7 @@ export function useAuth() {
   const signupHandler = async (values, setIsLoading) => {
     try {
       const response = await axios.post("/api/auth/signup", values);
-      localStorage.setItem("isLogged", true);
-      localStorage.setItem("user", response.data.user);
-      dispatch(login(response.data.user));
+      dispatch(login({ token: response.data.token, user: response.data.user }));
       setIsLoading(false);
       toast.success(response.data.message);
       router.push('/home');

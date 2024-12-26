@@ -29,6 +29,10 @@ const withAuth = (WrappedComponent) => {
             );
         }
 
+        if (!isLogged) {
+            return null;
+        }
+
         return <WrappedComponent {...props} />;
     };
 
