@@ -11,6 +11,7 @@ import useTransaction from "../handlers/useTransaction";
 import LoadingSpinner from "../components/LoadingSpinner";
 import AnualSaves from "./components/AnualSaves";
 import HistoricalSaves from "./components/HistoricalSaves";
+import withAuth from "../utils/withAuth";
 
 const Dashboard = () => {
 
@@ -206,4 +207,4 @@ const Dashboard = () => {
   );
 }  
 
-export default Dashboard
+export default withAuth(Dashboard);

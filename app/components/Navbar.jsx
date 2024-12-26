@@ -12,10 +12,10 @@ import LoadingSpinner from './LoadingSpinner';
 const Navbar = () => {
   const router = useRouter();
   const [isLogged, setIsLogged] = useState(null);
-  const state = useSelector((state) => state.authSlice.isLogged);
+  const state = useSelector((state) => state.auth.isLogged);
   const { logout } = useAuth();
   const [ isLoading, setIsLoading ] = useState(false);
-
+console.log(state)
   useEffect(() => {
     setIsLogged(state);
   }, [state])

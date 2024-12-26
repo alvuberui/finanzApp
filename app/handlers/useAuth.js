@@ -12,9 +12,8 @@ export function useAuth() {
   const loginHandler = async (values, setIsLoading) => {
     try {
       const response = await axios.post("/api/auth/signin", values);
-      localStorage.setItem("isLogged", true);
-      localStorage.setItem("user", response.data.user);
-      dispatch(login(response.data.user));
+      console.log(response.data);
+      dispatch(login({ token: response.data.token, user: response.data.user }));
       setIsLoading(false);
       router.push('/home');
       toast.success(response.data.message);

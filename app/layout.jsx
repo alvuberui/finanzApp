@@ -2,9 +2,10 @@
 import "./globals.css";
 import { Footer, Navbar } from "./components";
 import { Provider } from 'react-redux';
-import store from '../store';
+import store from './store/index';
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import AuthProvider from "./components/AuthProvider";
 
 const metadata = {
   title: "finanzApp",
@@ -24,10 +25,12 @@ export default function RootLayout({ children }) {
       </head>
       <body className="bg-gray-100">
       <Provider store={store}>
+        <AuthProvider>
         <Navbar />
         <ToastContainer />
         {children}
         <Footer />
+        </AuthProvider>
       </Provider>
       </body>
     </html>

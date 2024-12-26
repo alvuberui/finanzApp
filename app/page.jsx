@@ -7,9 +7,10 @@ import Link from 'next/link';
 
 import { useAuth } from "./handlers/useAuth";
 import LoadingSpinner from './components/LoadingSpinner';
+import withGuest from './utils/withGuest';
 
 
-export default function Home() {
+const Home = () => {
   
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
@@ -100,3 +101,5 @@ export default function Home() {
     </main>
   );
 }
+
+export default withGuest(Home);
